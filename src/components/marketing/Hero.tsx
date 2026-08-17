@@ -23,7 +23,7 @@ export function Hero() {
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button href="/app" size="lg">
+              <Button href="/app" size="lg" withArrow>
                 Start designing — Free
               </Button>
               <Button href="/how-it-works" variant="secondary" size="lg">

@@ -39,7 +39,7 @@ export function Header() {
                 {link.label}
               </NavLink>
             ))}
-            <Button href="/app" size="md" className="ml-2">
+            <Button href="/app" size="md" className="ml-2" withArrow>
               Try RATIO — Free
             </Button>
           </nav>
@@ -98,6 +98,7 @@ export function Header() {
                 size="lg"
                 className="mt-2 w-full"
                 onClick={() => setMenuOpen(false)}
+                withArrow
               >
                 Try RATIO — Free
               </Button>

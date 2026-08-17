@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, AnchorHTMLAttributes, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
-type Variant = 'primary' | 'secondary' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'inverse';
 type Size = 'md' | 'lg';
 
 interface SharedProps {
@@ -9,6 +9,22 @@ interface SharedProps {
   size?: Size;
   children: ReactNode;
   className?: string;
+  /** Appends a trailing arrow — RATIO's CTA convention for the primary "go" action. */
+  withArrow?: boolean;
+}
+
+function ArrowIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path
+        d="M2.5 7H11.5M11.5 7L7.5 3M11.5 7L7.5 11"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 type ButtonAsButton = SharedProps &
@@ -33,6 +49,7 @@ const variants: Record<Variant, string> = {
   secondary:
     'bg-transparent text-text-heading border border-border-strong hover:bg-surface-alt hover:border-ink-700',
   ghost: 'bg-transparent text-text-primary hover:text-text-heading hover:bg-surface-alt',
+  inverse: 'bg-surface-card text-text-heading hover:bg-surface-alt',
 };
 
 const sizes: Record<Size, string> = {
@@ -41,8 +58,23 @@ const sizes: Record<Size, string> = {
 };
 
 export function Button(props: ButtonProps) {
-  const { variant = 'primary', size = 'md', children, className = '', ...rest } = props;
+  const {
+    variant = 'primary',
+    size = 'md',
+    children,
+    className = '',
+    withArrow = false,
+    ...rest
+  } = props;
   const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+  const content = withArrow ? (
+    <>
+      {children}
+      <ArrowIcon />
+    </>
+  ) : (
+    children
+  );
 
   if ('href' in props && props.href) {
     const href = props.href;
@@ -51,20 +83,20 @@ export function Button(props: ButtonProps) {
     if (isInternal) {
       return (
         <Link to={href} className={classes} {...anchorRest}>
-          {children}
+          {content}
         </Link>
       );
     }
     return (
       <a href={href} className={classes} {...anchorRest}>
-        {children}
+        {content}
       </a>
     );
   }
 
   return (
     <button className={classes} {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}>
-      {children}
+      {content}
     </button>
   );
 }

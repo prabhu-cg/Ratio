@@ -3,6 +3,8 @@ import { MarketingLayout } from '@/components/layout/MarketingLayout';
 import { LandingPage } from '@/pages/LandingPage';
 import { HowItWorksPage } from '@/pages/HowItWorksPage';
 import { AboutPage } from '@/pages/AboutPage';
+import { PrivacyPage } from '@/pages/PrivacyPage';
+import { TermsPage } from '@/pages/TermsPage';
 import { AppPage } from '@/pages/AppPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 
@@ -13,6 +15,8 @@ export function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/how-it-works" element={<HowItWorksPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       <Route path="/app" element={<AppPage />} />
