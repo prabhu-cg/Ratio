@@ -1,0 +1,70 @@
+import type { ButtonHTMLAttributes, AnchorHTMLAttributes, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+
+type Variant = 'primary' | 'secondary' | 'ghost';
+type Size = 'md' | 'lg';
+
+interface SharedProps {
+  variant?: Variant;
+  size?: Size;
+  children: ReactNode;
+  className?: string;
+}
+
+type ButtonAsButton = SharedProps &
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    href?: undefined;
+  };
+
+type ButtonAsLink = SharedProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
+    href: string;
+  };
+
+type ButtonProps = ButtonAsButton | ButtonAsLink;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-[var(--radius-sm)] font-semibold ' +
+  'transition-colors duration-150 ease-[var(--ease-standard)] disabled:opacity-50 ' +
+  'disabled:pointer-events-none whitespace-nowrap';
+
+const variants: Record<Variant, string> = {
+  primary: 'bg-brand text-text-inverse hover:bg-brand-ink',
+  secondary:
+    'bg-transparent text-text-heading border border-border-strong hover:bg-surface-alt hover:border-ink-700',
+  ghost: 'bg-transparent text-text-primary hover:text-text-heading hover:bg-surface-alt',
+};
+
+const sizes: Record<Size, string> = {
+  md: 'h-10 px-4 text-sm',
+  lg: 'h-12 px-6 text-base',
+};
+
+export function Button(props: ButtonProps) {
+  const { variant = 'primary', size = 'md', children, className = '', ...rest } = props;
+  const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+
+  if ('href' in props && props.href) {
+    const href = props.href;
+    const { href: _href, ...anchorRest } = rest as AnchorHTMLAttributes<HTMLAnchorElement>;
+    const isInternal = href.startsWith('/');
+    if (isInternal) {
+      return (
+        <Link to={href} className={classes} {...anchorRest}>
+          {children}
+        </Link>
+      );
+    }
+    return (
+      <a href={href} className={classes} {...anchorRest}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <button className={classes} {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}>
+      {children}
+    </button>
+  );
+}

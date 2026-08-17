@@ -1,0 +1,34 @@
+.workspace-grid {
+  display: grid;
+  flex: 1;
+  gap: 1px;
+  background-color: var(--color-border-default);
+  grid-template-columns: 1fr;
+  grid-template-areas: 'controls' 'viz' 'preview';
+}
+
+@media (min-width: 768px) {
+  .workspace-grid {
+    grid-template-columns: 232px 1fr;
+    grid-template-areas: 'controls viz' 'controls preview';
+  }
+}
+
+@media (min-width: 1024px) {
+  .workspace-grid {
+    grid-template-columns: 272px 1fr 380px;
+    grid-template-areas: 'controls viz preview';
+  }
+}
+
+.workspace-controls {
+  grid-area: controls;
+}
+
+.workspace-viz {
+  grid-area: viz;
+}
+
+.workspace-preview {
+  grid-area: preview;
+}

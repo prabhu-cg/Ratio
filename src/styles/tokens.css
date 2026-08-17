@@ -1,0 +1,56 @@
+@theme {
+  /* ---- Brand ---- */
+  --color-brand: #c74504;
+  --color-brand-ink: #a13803;
+  --color-brand-soft: #f7e6dc;
+
+  /* ---- Interface neutrals (RATIO's own chrome — never the analysed palette) ---- */
+  --color-ink-900: #1e1c1a;
+  --color-ink-700: #444444;
+  --color-ink-500: #6e6d68;
+  --color-ink-300: #a6a49c;
+
+  --color-paper-000: #ffffff;
+  --color-paper-050: #fcfbf9;
+  --color-paper-100: #f1efe9;
+  --color-paper-200: #e4e1d8;
+  --color-paper-300: #d2cdbf;
+
+  /* ---- Semantic aliases ---- */
+  --color-text-heading: var(--color-ink-900);
+  --color-text-primary: var(--color-ink-700);
+  --color-text-muted: var(--color-ink-500);
+  --color-text-faint: var(--color-ink-300);
+  --color-text-inverse: var(--color-paper-050);
+
+  --color-surface-page: var(--color-paper-050);
+  --color-surface-card: var(--color-paper-000);
+  --color-surface-alt: var(--color-paper-100);
+  --color-surface-inverse: var(--color-ink-900);
+
+  --color-border-default: var(--color-paper-200);
+  --color-border-strong: var(--color-paper-300);
+
+  --color-focus-ring: var(--color-brand);
+
+  /* ---- The analysed palette (Phase 1 static default — kept namespaced) ---- */
+  --color-swatch-dominant: #f7f5f0;
+  --color-swatch-secondary: #444444;
+  --color-swatch-accent: #c74504;
+
+  /* ---- Type ---- */
+  --font-display: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, monospace;
+
+  /* ---- Radius ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* ---- Shadow (restrained, single elevation) ---- */
+  --shadow-card: 0 1px 2px rgba(30, 28, 26, 0.04), 0 8px 24px -12px rgba(30, 28, 26, 0.12);
+
+  /* ---- Motion ---- */
+  --ease-standard: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
