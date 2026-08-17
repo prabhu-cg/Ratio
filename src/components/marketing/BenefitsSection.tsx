@@ -7,7 +7,10 @@ const BENEFITS = [
   { title: 'No account required', description: 'Use every part of RATIO without signing up.' },
   { title: 'No AI required', description: 'Deliberate, designer-led decisions — not generated for you.' },
   { title: 'Fast', description: 'A lightweight tool that responds instantly, not a heavy app.' },
-  { title: 'Privacy-friendly', description: 'Your palettes stay in your browser.' },
+  {
+    title: 'Privacy-friendly',
+    description: 'Your colours stay in your browser. No account, no server, no tracking.',
+  },
 ];
 
 export function BenefitsSection() {

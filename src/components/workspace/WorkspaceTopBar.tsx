@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { Logo } from '@/components/brand/Logo';
 import { Button } from '@/components/ui/Button';
-import { Tooltip } from '@/components/ui/Tooltip';
+import { ExportDrawer } from '@/components/workspace/ExportDrawer';
+import type { RatioPalette } from '@/types/palette';
 
 interface WorkspaceTopBarProps {
+  palette: RatioPalette;
   isModified: boolean;
   onReset: () => void;
 }
 
-export function WorkspaceTopBar({ isModified, onReset }: WorkspaceTopBarProps) {
+export function WorkspaceTopBar({ palette, isModified, onReset }: WorkspaceTopBarProps) {
   const [confirming, setConfirming] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
 
   const handleResetClick = () => {
     if (!isModified) return;
@@ -47,12 +50,12 @@ export function WorkspaceTopBar({ isModified, onReset }: WorkspaceTopBarProps) {
           </Button>
         )}
 
-        <Tooltip content="Export arrives in a later phase">
-          <Button variant="secondary" size="md" disabled aria-disabled="true">
-            Export
-          </Button>
-        </Tooltip>
+        <Button variant="secondary" size="md" onClick={() => setExportOpen(true)}>
+          Export
+        </Button>
       </div>
+
+      <ExportDrawer palette={palette} open={exportOpen} onClose={() => setExportOpen(false)} />
     </header>
   );
 }

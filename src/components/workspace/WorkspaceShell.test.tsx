@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { WorkspaceShell } from '@/components/workspace/WorkspaceShell';
 
 beforeEach(() => {
+  window.localStorage.clear();
   Object.defineProperty(navigator, 'clipboard', {
     value: { writeText: vi.fn().mockResolvedValue(undefined) },
     configurable: true,

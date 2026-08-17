@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { PreviewControls } from '@/components/preview/PreviewControls';
 import { PreviewFrame } from '@/components/preview/PreviewFrame';
@@ -9,13 +8,23 @@ import type { VisionSimulationId } from '@/types/accessibility';
 
 interface PreviewPanelProps {
   palette: RatioPalette;
+  templateId: PreviewTemplateId;
+  viewport: PreviewViewportId;
+  visionMode: VisionSimulationId;
+  onTemplateChange: (id: PreviewTemplateId) => void;
+  onViewportChange: (id: PreviewViewportId) => void;
+  onVisionModeChange: (id: VisionSimulationId) => void;
 }
 
-export function PreviewPanel({ palette }: PreviewPanelProps) {
-  const [templateId, setTemplateId] = useState<PreviewTemplateId>('landing');
-  const [viewport, setViewport] = useState<PreviewViewportId>('desktop');
-  const [visionMode, setVisionMode] = useState<VisionSimulationId>('normal');
-
+export function PreviewPanel({
+  palette,
+  templateId,
+  viewport,
+  visionMode,
+  onTemplateChange,
+  onViewportChange,
+  onVisionModeChange,
+}: PreviewPanelProps) {
   return (
     <aside
       aria-label="Live preview"
@@ -32,9 +41,9 @@ export function PreviewPanel({ palette }: PreviewPanelProps) {
         templateId={templateId}
         viewport={viewport}
         visionMode={visionMode}
-        onTemplateChange={setTemplateId}
-        onViewportChange={setViewport}
-        onVisionModeChange={setVisionMode}
+        onTemplateChange={onTemplateChange}
+        onViewportChange={onViewportChange}
+        onVisionModeChange={onVisionModeChange}
       />
 
       <PreviewFrame palette={palette} templateId={templateId} viewport={viewport} visionMode={visionMode}>

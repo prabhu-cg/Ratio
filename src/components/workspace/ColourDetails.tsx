@@ -48,7 +48,7 @@ export function ColourDetails({ colour, roleLabel }: ColourDetailsProps) {
             <CopyButton
               label={`Copy ${row.label} value for ${roleLabel}`}
               copied={copiedKey === row.key}
-              onCopy={() => copy(row.key, row.value)}
+              onCopy={() => copy(row.key, row.value, `${roleLabel} ${row.label}`)}
             />
           </div>
         ))}

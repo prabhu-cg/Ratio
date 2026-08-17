@@ -1,9 +1,10 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   children: ReactNode;
   variant?: 'default' | 'inverse';
+  ref?: Ref<HTMLButtonElement>;
 }
 
 export function IconButton({
@@ -11,6 +12,7 @@ export function IconButton({
   children,
   variant = 'default',
   className = '',
+  ref,
   ...rest
 }: IconButtonProps) {
   const variants = {
@@ -20,6 +22,7 @@ export function IconButton({
 
   return (
     <button
+      ref={ref}
       aria-label={label}
       title={label}
       className={`inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] transition-colors duration-150 ${variants[variant]} ${className}`}

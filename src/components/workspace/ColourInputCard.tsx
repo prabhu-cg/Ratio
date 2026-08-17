@@ -89,7 +89,7 @@ export function ColourInputCard({ role, onChangeHex, onResetRole }: ColourInputC
         <CopyButton
           label={`Copy ${role.label} hex value`}
           copied={copiedKey === 'quick-hex'}
-          onCopy={() => copy('quick-hex', role.colour.hex)}
+          onCopy={() => copy('quick-hex', role.colour.hex, `${role.label} hex`)}
         />
 
         <Tooltip content={isDefault ? `${role.label} is at its default colour` : `Reset ${role.label} to default`}>
