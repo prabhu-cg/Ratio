@@ -4,13 +4,15 @@ import userEvent from '@testing-library/user-event';
 import { PreviewControls } from '@/components/preview/PreviewControls';
 
 describe('PreviewControls', () => {
-  it('marks the active template and viewport as selected', () => {
+  it('marks the active template, viewport, and vision mode as selected', () => {
     render(
       <PreviewControls
         templateId="dashboard"
         viewport="tablet"
+        visionMode="deuteranopia"
         onTemplateChange={vi.fn()}
         onViewportChange={vi.fn()}
+        onVisionModeChange={vi.fn()}
       />,
     );
 
@@ -20,19 +22,27 @@ describe('PreviewControls', () => {
       'false',
     );
     expect(screen.getByRole('tab', { name: 'Tablet' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'Deuteranopia' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    expect(screen.getByRole('tab', { name: 'Normal' })).toHaveAttribute('aria-selected', 'false');
   });
 
-  it('calls back immediately when a template or viewport is chosen', async () => {
+  it('calls back immediately when a template, viewport, or vision mode is chosen', async () => {
     const user = userEvent.setup();
     const onTemplateChange = vi.fn();
     const onViewportChange = vi.fn();
+    const onVisionModeChange = vi.fn();
 
     render(
       <PreviewControls
         templateId="landing"
         viewport="desktop"
+        visionMode="normal"
         onTemplateChange={onTemplateChange}
         onViewportChange={onViewportChange}
+        onVisionModeChange={onVisionModeChange}
       />,
     );
 
@@ -41,5 +51,8 @@ describe('PreviewControls', () => {
 
     await user.click(screen.getByRole('tab', { name: 'Mobile' }));
     expect(onViewportChange).toHaveBeenCalledWith('mobile');
+
+    await user.click(screen.getByRole('tab', { name: 'Grayscale' }));
+    expect(onVisionModeChange).toHaveBeenCalledWith('grayscale');
   });
 });

@@ -5,6 +5,7 @@ import { PreviewFrame } from '@/components/preview/PreviewFrame';
 import { PreviewTemplate } from '@/components/preview/PreviewTemplate';
 import type { PreviewTemplateId, PreviewViewportId } from '@/types/preview';
 import type { RatioPalette } from '@/types/palette';
+import type { VisionSimulationId } from '@/types/accessibility';
 
 interface PreviewPanelProps {
   palette: RatioPalette;
@@ -13,6 +14,7 @@ interface PreviewPanelProps {
 export function PreviewPanel({ palette }: PreviewPanelProps) {
   const [templateId, setTemplateId] = useState<PreviewTemplateId>('landing');
   const [viewport, setViewport] = useState<PreviewViewportId>('desktop');
+  const [visionMode, setVisionMode] = useState<VisionSimulationId>('normal');
 
   return (
     <aside
@@ -29,11 +31,13 @@ export function PreviewPanel({ palette }: PreviewPanelProps) {
       <PreviewControls
         templateId={templateId}
         viewport={viewport}
+        visionMode={visionMode}
         onTemplateChange={setTemplateId}
         onViewportChange={setViewport}
+        onVisionModeChange={setVisionMode}
       />
 
-      <PreviewFrame palette={palette} templateId={templateId} viewport={viewport}>
+      <PreviewFrame palette={palette} templateId={templateId} viewport={viewport} visionMode={visionMode}>
         <PreviewTemplate templateId={templateId} />
       </PreviewFrame>
     </aside>

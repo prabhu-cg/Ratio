@@ -43,4 +43,18 @@ describe('PreviewPanel', () => {
 
     expect(varHost).toHaveStyle({ '--preview-accent': '#2563EB' });
   });
+
+  it('applies a colour-vision simulation to the preview immediately when selected', async () => {
+    const user = userEvent.setup();
+    render(<PreviewPanel palette={createDefaultPalette()} />);
+
+    const varHost = screen
+      .getByText('Design with confidence, ship with clarity')
+      .closest('.\\@container') as HTMLElement;
+    expect(varHost).toHaveStyle({ filter: 'none' });
+
+    await user.click(screen.getByRole('tab', { name: 'Tritanopia' }));
+
+    expect(varHost).toHaveStyle({ filter: 'url(#ratio-vision-tritanopia)' });
+  });
 });

@@ -3,11 +3,13 @@
 **Balance colour. Build hierarchy.**
 
 RATIO is a free, browser-based colour visualisation tool built around the 60–30–10 colour
-principle. **Phase V1.3** adds a real, dynamic UI preview system — Landing Page, Dashboard, and
-Content templates built from real HTML/CSS (no screenshots), each rendering the live palette at
-Desktop/Tablet/Mobile emulated widths with genuine responsive behaviour. V1.2 added the colour
-workspace (editable colours, hex/rgb/hsl engine, live ratio visualisation, copy/reset). V1.1
-established the marketing site, routing, application shell, and design system.
+principle. **Phase V1.4** adds contrast and colour-vision guidance — a WCAG contrast engine, six
+purposeful contrast checks in a new Accessibility panel, and Protanopia/Deuteranopia/Tritanopia/
+Grayscale simulation applied live to the preview canvas. V1.3 added a real, dynamic UI preview
+system (Landing Page, Dashboard, Content templates in real HTML/CSS at Desktop/Tablet/Mobile
+widths). V1.2 added the colour workspace (editable colours, hex/rgb/hsl engine, live ratio
+visualisation, copy/reset). V1.1 established the marketing site, routing, application shell, and
+design system.
 
 ## Stack
 
@@ -53,14 +55,39 @@ src/
     ui/            Reusable primitives (Button, Card, Input, CopyButton, Tabs, ...)
     marketing/      Landing page sections + the RatioStackVisual signature visual
     workspace/      /app shell panels (controls, ratio, preview) + colour input UI
-    preview/        The V1.3 live UI preview system (see below)
+      accessibility/  ContrastCheckCard, ContrastStatusBadge (the Accessibility panel's UI)
+    preview/        The V1.3 live UI preview system, plus V1.4's vision-simulation filters
   pages/           Route-level components
   hooks/           usePalette (workspace state), useCopyToClipboard, useDocumentTitle
-  lib/             color.ts — the colour engine (hex/rgb/hsl conversion, validation, contrast)
-  types/           Colour, RatioPalette, RatioRole, preview template/viewport types
+  lib/             color.ts (colour engine), wcag.ts (thresholds), contrastChecks.ts (the six checks)
+  types/           Colour, RatioPalette, RatioRole, preview + accessibility types
   styles/          Design tokens and workspace grid CSS
   test/            Vitest setup (jest-dom, RTL cleanup, ResizeObserver stub)
 ```
+
+### Accessibility (`src/lib/wcag.ts`, `src/lib/contrastChecks.ts`, `AccessibilityPanel`)
+
+A new "3 · Accessibility" section sits inside the workspace's centre column, below the ratio bar.
+It runs six fixed, purposeful contrast checks against the live palette — not an arbitrary sweep
+of every colour against every other colour:
+
+1. Primary text on Dominant — the text colour the preview auto-picks for the page background
+2. Primary text on Secondary — text inside cards/headers/sidebars
+3. Primary text on Accent — text inside accent buttons/highlights
+4. White on Accent — the common hardcoded-white-button-text convention
+5. Dark text on Accent — the common hardcoded-near-black-text convention
+6. Secondary as text on Dominant — the secondary colour itself used as text/icons
+
+Each check reports a ratio, AA/AAA pass for normal text, and a plain-language status —
+`✓ Good` / `⚠ Review` / `✕ Fails` — always paired with text, never colour alone. Status is a
+direct read of the WCAG AA thresholds (`good` ≥ 4.5:1, `review` ≥ 3:1, `fail` below), not a
+separate scoring system. RATIO never changes the user's colours or suggests replacements — only
+describes the relationship.
+
+Colour-vision simulation (Normal/Protanopia/Deuteranopia/Tritanopia/Grayscale) is a CSS `filter`
+(`feColorMatrix` for the three dichromacy types, `grayscale(1)` for Grayscale) applied to the
+preview canvas only, via `VisionFilters` + `PreviewFrame` — RATIO's own chrome and the toolbar
+above the canvas are never simulated.
 
 ### Preview system (`src/components/preview/`)
 

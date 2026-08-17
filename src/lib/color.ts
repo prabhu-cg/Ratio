@@ -128,6 +128,11 @@ export function contrastRatio(a: RGB, b: RGB): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+/** Convenience wrapper for contrastRatio when both colours are known-valid hex strings. */
+export function contrastRatioHex(a: string, b: string): number {
+  return contrastRatio(hexToRgb(a), hexToRgb(b));
+}
+
 /** Builds a full Colour record from any accepted hex input, or null if invalid. */
 export function toColour(input: string): Colour | null {
   const hex = normalizeHex(input);

@@ -1,15 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { PreviewToolbar } from '@/components/preview/PreviewToolbar';
+import { VisionFilters } from '@/components/preview/VisionFilters';
 import { pickReadableTextColor } from '@/lib/color';
 import { PREVIEW_VIEWPORTS } from '@/types/preview';
 import type { PreviewTemplateId, PreviewViewportId } from '@/types/preview';
 import type { RatioPalette } from '@/types/palette';
+import { VISION_FILTER_STYLES, VISION_SIMULATIONS } from '@/types/accessibility';
+import type { VisionSimulationId } from '@/types/accessibility';
 
 interface PreviewFrameProps {
   palette: RatioPalette;
   templateId: PreviewTemplateId;
   viewport: PreviewViewportId;
+  visionMode: VisionSimulationId;
   children: ReactNode;
 }
 
@@ -20,7 +24,13 @@ interface PreviewFrameProps {
  * fitting inside a narrow sidebar. Screenshots/scaled images would fake this; a
  * transform on real HTML does not.
  */
-export function PreviewFrame({ palette, templateId, viewport, children }: PreviewFrameProps) {
+export function PreviewFrame({
+  palette,
+  templateId,
+  viewport,
+  visionMode,
+  children,
+}: PreviewFrameProps) {
   const deviceWidth = PREVIEW_VIEWPORTS.find((option) => option.id === viewport)?.width ?? 1200;
 
   const outerRef = useRef<HTMLDivElement>(null);
@@ -58,8 +68,11 @@ export function PreviewFrame({ palette, templateId, viewport, children }: Previe
     '--preview-on-accent': pickReadableTextColor(palette.accent.colour.rgb),
   } as CSSProperties;
 
+  const visionLabel = VISION_SIMULATIONS.find((option) => option.id === visionMode)?.label;
+
   return (
     <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border-strong bg-surface-card shadow-[var(--shadow-card)]">
+      <VisionFilters />
       <PreviewToolbar templateId={templateId} viewport={viewport} />
 
       <div
@@ -70,11 +83,22 @@ export function PreviewFrame({ palette, templateId, viewport, children }: Previe
         <div
           ref={innerRef}
           className="@container origin-top-left"
-          style={{ width: deviceWidth, transform: `scale(${scale})`, ...previewVars }}
+          style={{
+            width: deviceWidth,
+            transform: `scale(${scale})`,
+            filter: VISION_FILTER_STYLES[visionMode],
+            ...previewVars,
+          }}
         >
           {children}
         </div>
       </div>
+
+      <p role="status" className="sr-only">
+        {visionMode === 'normal'
+          ? 'Preview colour simulation is off.'
+          : `Preview is now simulating ${visionLabel} vision.`}
+      </p>
     </div>
   );
 }
