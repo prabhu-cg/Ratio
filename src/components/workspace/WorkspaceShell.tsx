@@ -3,8 +3,12 @@ import { WorkspaceTopBar } from '@/components/workspace/WorkspaceTopBar';
 import { ControlsPanel } from '@/components/workspace/ControlsPanel';
 import { RatioVisualisation } from '@/components/workspace/RatioVisualisation';
 import { PreviewPanel } from '@/components/workspace/PreviewPanel';
+import { AccessibilityPanel } from '@/components/workspace/AccessibilityPanel';
+import { GuidePanel } from '@/components/workspace/GuidePanel';
+import { useToast } from '@/components/ui/ToastProvider';
 import { usePalette } from '@/hooks/usePalette';
 import { usePreviewSettings } from '@/hooks/usePreviewSettings';
+import { useOnboarding } from '@/hooks/useOnboarding';
 
 export function WorkspaceShell() {
   const { palette, setRoleHex, resetRole, resetPalette, isModified } = usePalette();
@@ -17,11 +21,14 @@ export function WorkspaceShell() {
     setVisionMode,
     resetVisionMode,
   } = usePreviewSettings();
+  const { isGuideOpen, dismissGuide, openGuide } = useOnboarding();
+  const { notify } = useToast();
 
   const handleReset = useCallback(() => {
     resetPalette();
     resetVisionMode();
-  }, [resetPalette, resetVisionMode]);
+    notify('Palette restored to the example');
+  }, [resetPalette, resetVisionMode, notify]);
 
   // The workspace is a fixed-viewport app shell — nothing outside the three columns
   // (and the device preview canvas inside them) should ever scroll the page itself.
@@ -32,7 +39,11 @@ export function WorkspaceShell() {
   // the event level: any wheel event that didn't originate inside one of the
   // legitimately-scrollable regions is simply prevented outright.
   useEffect(() => {
-    const SCROLLABLE_SELECTOR = '.workspace-controls, .workspace-viz, .workspace-preview';
+    // Modals (the guide panel, the export drawer) render outside the workspace grid
+    // entirely, so their own scrollable content must also be exempted here — otherwise
+    // this handler blocks scrolling inside them too.
+    const SCROLLABLE_SELECTOR =
+      '.workspace-controls, .workspace-viz, .workspace-preview, .workspace-accessibility, [role="dialog"]';
 
     const handleWheel = (event: WheelEvent) => {
       const target = event.target as Element | null;
@@ -64,16 +75,17 @@ export function WorkspaceShell() {
       >
         Skip to workspace
       </a>
-      <WorkspaceTopBar palette={palette} isModified={isModified} onReset={handleReset} />
+      <WorkspaceTopBar
+        palette={palette}
+        isModified={isModified}
+        onReset={handleReset}
+        onOpenGuide={openGuide}
+      />
       <h1 className="sr-only">RATIO workspace — colour controls, ratio, and live preview</h1>
       <div id="workspace-main" className="workspace-grid min-h-0 flex-1 overflow-y-auto md:overflow-visible">
-        <ControlsPanel
-          palette={palette}
-          isModified={isModified}
-          onChangeRoleHex={setRoleHex}
-          onResetRole={resetRole}
-        />
+        <ControlsPanel palette={palette} onChangeRoleHex={setRoleHex} onResetRole={resetRole} />
         <RatioVisualisation palette={palette} />
+        <AccessibilityPanel palette={palette} />
         <PreviewPanel
           palette={palette}
           templateId={templateId}
@@ -84,6 +96,8 @@ export function WorkspaceShell() {
           onVisionModeChange={setVisionMode}
         />
       </div>
+
+      <GuidePanel open={isGuideOpen} onClose={dismissGuide} />
     </div>
   );
 }

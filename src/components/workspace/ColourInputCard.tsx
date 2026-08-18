@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { IconButton } from '@/components/ui/IconButton';
 import { Tooltip } from '@/components/ui/Tooltip';
+import { useToast } from '@/components/ui/ToastProvider';
 import { ColourDetails } from '@/components/workspace/ColourDetails';
 import type { RatioRole, SupportingRole } from '@/types/palette';
 
@@ -16,6 +17,7 @@ export function ColourInputCard({ role, defaultHex, onChangeHex, onResetRole }: 
   const [draft, setDraft] = useState(role.colour.hex);
   const [error, setError] = useState(false);
   const [syncedHex, setSyncedHex] = useState(role.colour.hex);
+  const { notify } = useToast();
   const descriptionId = useId();
   const inputId = useId();
   const pickerLabelId = useId();
@@ -33,7 +35,11 @@ export function ColourInputCard({ role, defaultHex, onChangeHex, onResetRole }: 
       setError(false);
       return;
     }
-    setError(!onChangeHex(trimmed));
+    const succeeded = onChangeHex(trimmed);
+    setError(!succeeded);
+    // Only the committed text-entry path notifies — the native colour picker fires
+    // onChange continuously while dragging, and a toast per tick would be spam.
+    if (succeeded) notify('Preview updated');
   };
 
   const isDefault = role.colour.hex === defaultHex;

@@ -2,6 +2,8 @@ import { Badge } from '@/components/ui/Badge';
 import { PreviewControls } from '@/components/preview/PreviewControls';
 import { PreviewFrame } from '@/components/preview/PreviewFrame';
 import { PreviewTemplate } from '@/components/preview/PreviewTemplate';
+import { useToast } from '@/components/ui/ToastProvider';
+import { PREVIEW_TEMPLATES } from '@/types/preview';
 import type { PreviewTemplateId, PreviewViewportId } from '@/types/preview';
 import type { ProjectPalette } from '@/types/palette';
 import type { VisionSimulationId } from '@/types/accessibility';
@@ -25,23 +27,36 @@ export function PreviewPanel({
   onViewportChange,
   onVisionModeChange,
 }: PreviewPanelProps) {
+  const { notify } = useToast();
+
+  const handleTemplateChange = (id: PreviewTemplateId) => {
+    onTemplateChange(id);
+    const label = PREVIEW_TEMPLATES.find((option) => option.id === id)?.label ?? id;
+    notify(`Viewing ${label.toLowerCase()} preview`);
+  };
+
   return (
     <aside
       aria-label="Live preview"
-      className="workspace-preview flex flex-col gap-4 overflow-y-auto overflow-x-hidden bg-surface-card p-5"
+      className="workspace-preview flex flex-col gap-4 overflow-y-auto overflow-x-hidden bg-surface-card p-5 sm:p-8"
     >
-      <div className="flex items-center justify-between">
+      <div className="relative flex flex-col gap-1 pr-14">
         <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-text-muted">
-          Preview
+          4 · Preview
         </h2>
-        <Badge tone="brand">Live</Badge>
+        <p className="text-sm text-text-muted">
+          See how your colours behave in a realistic interface.
+        </p>
+        <Badge tone="brand" className="absolute right-0 top-0">
+          Live
+        </Badge>
       </div>
 
       <PreviewControls
         templateId={templateId}
         viewport={viewport}
         visionMode={visionMode}
-        onTemplateChange={onTemplateChange}
+        onTemplateChange={handleTemplateChange}
         onViewportChange={onViewportChange}
         onVisionModeChange={onVisionModeChange}
       />

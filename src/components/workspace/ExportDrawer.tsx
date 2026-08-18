@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import { IconButton } from '@/components/ui/IconButton';
 import { CopyButton } from '@/components/ui/CopyButton';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import {
   buildCssVariables,
   buildJsonExport,
@@ -20,47 +21,12 @@ interface ExportDrawerProps {
   onClose: () => void;
 }
 
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
-
 export function ExportDrawer({ palette, open, onClose }: ExportDrawerProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const { copy, copiedKey } = useCopyToClipboard();
 
-  useEffect(() => {
-    if (!open) return;
-
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-    closeButtonRef.current?.focus();
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-        return;
-      }
-      if (event.key !== 'Tab') return;
-
-      const focusables = panelRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
-      if (!focusables || focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      previouslyFocused?.focus();
-    };
-  }, [open, onClose]);
+  useFocusTrap(open, panelRef, closeButtonRef, onClose);
 
   if (!open) return null;
 
@@ -91,13 +57,18 @@ export function ExportDrawer({ palette, open, onClose }: ExportDrawerProps) {
         aria-labelledby="export-drawer-heading"
         className="relative flex h-full w-full max-w-sm flex-col gap-6 overflow-y-auto border-l border-border-default bg-surface-card p-6 shadow-[var(--shadow-card)]"
       >
-        <div className="flex items-center justify-between">
-          <h2
-            id="export-drawer-heading"
-            className="font-display text-lg font-bold text-text-heading"
-          >
-            Export
-          </h2>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2
+              id="export-drawer-heading"
+              className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-text-muted"
+            >
+              5 · Export
+            </h2>
+            <p className="mt-1 text-sm text-text-muted">
+              Take your palette into your design or development workflow.
+            </p>
+          </div>
           <IconButton ref={closeButtonRef} label="Close export panel" onClick={onClose}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path

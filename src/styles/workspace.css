@@ -5,27 +5,32 @@
   gap: 1px;
   background-color: var(--color-border-default);
   grid-template-columns: 1fr;
-  grid-template-areas: 'controls' 'viz' 'preview';
+  /* Mobile stacking follows the numbered workflow: colours, balance, accessibility,
+     preview — matching the step numbers in each section's heading. */
+  grid-template-areas: 'controls' 'viz' 'accessibility' 'preview';
 }
 
 @media (min-width: 768px) {
   .workspace-grid {
     grid-template-columns: 232px 1fr;
-    /* Two explicit, shrinkable rows — without this, 'auto' rows grow to fit each
+    /* Three explicit, shrinkable rows — without this, 'auto' rows grow to fit each
        column's full content height instead of the viewport, and the whole page
-       scrolls together instead of each column scrolling independently. */
-    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas: 'controls viz' 'controls preview';
+       scrolls together instead of each column scrolling independently. Ratio keeps
+       its natural height; accessibility and preview split what's left. */
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: 'controls viz' 'controls accessibility' 'controls preview';
   }
 }
 
 @media (min-width: 1024px) {
   .workspace-grid {
     /* Preview gets the flexible share so it's always the largest column and grows
-       with the window; the ratio/accessibility column stays a comfortable fixed width. */
-    grid-template-columns: 272px 420px 1fr;
-    grid-template-rows: minmax(0, 1fr);
-    grid-template-areas: 'controls viz preview';
+       with the window; the ratio/accessibility column stays a comfortable fixed width.
+       Ratio and accessibility are separate grid items, stacked in numbered order
+       (2 then 3) in the same column, with preview (4) spanning both rows. */
+    grid-template-columns: 320px 540px 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: 'controls viz preview' 'controls accessibility preview';
   }
 }
 
@@ -36,7 +41,8 @@
  */
 .workspace-controls,
 .workspace-viz,
-.workspace-preview {
+.workspace-preview,
+.workspace-accessibility {
   overscroll-behavior-y: contain;
 }
 
@@ -50,6 +56,10 @@
 
 .workspace-preview {
   grid-area: preview;
+}
+
+.workspace-accessibility {
+  grid-area: accessibility;
 }
 
 /*

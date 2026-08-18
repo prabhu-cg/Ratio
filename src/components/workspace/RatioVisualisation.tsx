@@ -1,6 +1,5 @@
 import { RatioStackVisual } from '@/components/marketing/RatioStackVisual';
-import { AccessibilityPanel } from '@/components/workspace/AccessibilityPanel';
-import { Divider } from '@/components/ui/Divider';
+import { RatioInfoPopover } from '@/components/workspace/RatioInfoPopover';
 import type { ProjectPalette } from '@/types/palette';
 
 interface RatioVisualisationProps {
@@ -15,25 +14,24 @@ export function RatioVisualisation({ palette }: RatioVisualisationProps) {
       aria-label="Ratio visualisation"
       className="workspace-viz flex flex-col gap-4 overflow-y-auto bg-surface-page p-5 sm:p-8"
     >
-      <div className="flex items-center justify-between">
+      <div className="relative flex flex-col gap-1 pr-8">
         <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-text-muted">
-          2 · See the ratio
+          2 · Balance
         </h2>
-        <span className="font-mono text-xs text-text-muted">
-          {ratio.dominant.percentage} / {ratio.secondary.percentage} / {ratio.accent.percentage}
-        </span>
+        <p className="text-sm text-text-muted">
+          See how Dominant, Secondary and Accent colours are distributed.
+        </p>
+        <div className="absolute right-0 top-0">
+          <RatioInfoPopover />
+        </div>
       </div>
 
       <RatioStackVisual
         palette={ratio}
         orientation="horizontal"
-        heightClassName="h-[280px] sm:h-[340px]"
+        heightClassName="h-[216px]"
         className="flex-none"
       />
-
-      <Divider className="my-2" />
-
-      <AccessibilityPanel palette={palette} />
     </section>
   );
 }

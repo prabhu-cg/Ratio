@@ -24,7 +24,7 @@ describe('ExportDrawer', () => {
   it('shows the palette, CSS, and JSON sections with the live palette values, including Text', () => {
     render(<ExportDrawer palette={createDefaultProjectPalette()} open onClose={vi.fn()} />);
 
-    expect(screen.getByRole('dialog', { name: 'Export' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: '5 · Export' })).toBeInTheDocument();
     expect(screen.getByText('Palette')).toBeInTheDocument();
     expect(screen.getByText('CSS')).toBeInTheDocument();
     expect(screen.getByText('JSON')).toBeInTheDocument();
