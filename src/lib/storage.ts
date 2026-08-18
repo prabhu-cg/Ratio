@@ -10,6 +10,7 @@ export interface PersistedWorkspaceState {
   dominant?: string;
   secondary?: string;
   accent?: string;
+  text?: string;
   template?: string;
   viewport?: string;
   visionMode?: string;

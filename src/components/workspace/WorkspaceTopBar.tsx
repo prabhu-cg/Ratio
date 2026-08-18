@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Logo } from '@/components/brand/Logo';
 import { Button } from '@/components/ui/Button';
 import { ExportDrawer } from '@/components/workspace/ExportDrawer';
-import type { RatioPalette } from '@/types/palette';
+import type { ProjectPalette } from '@/types/palette';
 
 interface WorkspaceTopBarProps {
-  palette: RatioPalette;
+  palette: ProjectPalette;
   isModified: boolean;
   onReset: () => void;
 }

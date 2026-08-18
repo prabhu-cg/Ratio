@@ -90,4 +90,47 @@ describe('WorkspaceShell', () => {
     expect(screen.getByText('Default')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Reset' })).toBeDisabled();
   });
+
+  it('shows the Text / Foreground supporting control alongside the ratio controls', () => {
+    renderWorkspace();
+
+    expect(screen.getByText('Supporting colours')).toBeInTheDocument();
+    expect(screen.getByLabelText('Text / Foreground hex value')).toBeInTheDocument();
+  });
+
+  it('changing Text / Foreground updates its own control and leaves the 60/30/10 ratio untouched', async () => {
+    const user = userEvent.setup();
+    renderWorkspace();
+
+    const textInput = screen.getByLabelText('Text / Foreground hex value');
+    await user.clear(textInput);
+    await user.type(textInput, '#123456');
+    await user.tab();
+
+    expect(screen.getByText('Custom')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /60% Dominant, #F7F5F0.*30% Secondary, #D9D4CC.*10% Accent, #C74504/ }))
+      .toBeInTheDocument();
+  });
+
+  it('reset restores all four project colours, including Text / Foreground', async () => {
+    const user = userEvent.setup();
+    renderWorkspace();
+
+    const accentInput = screen.getByLabelText('Accent hex value');
+    await user.clear(accentInput);
+    await user.type(accentInput, '#00A86B');
+    await user.tab();
+
+    const textInput = screen.getByLabelText('Text / Foreground hex value');
+    await user.clear(textInput);
+    await user.type(textInput, '#123456');
+    await user.tab();
+
+    await user.click(screen.getByRole('button', { name: 'Reset' }));
+    await user.click(screen.getByRole('button', { name: 'Confirm' }));
+
+    expect(screen.getByRole('img', { name: /60% Dominant, #F7F5F0/ })).toBeInTheDocument();
+    expect(screen.getByLabelText('Text / Foreground hex value')).toHaveValue('#444444');
+    expect(screen.getByText('Default')).toBeInTheDocument();
+  });
 });

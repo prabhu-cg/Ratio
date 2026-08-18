@@ -3,11 +3,11 @@ import { PreviewControls } from '@/components/preview/PreviewControls';
 import { PreviewFrame } from '@/components/preview/PreviewFrame';
 import { PreviewTemplate } from '@/components/preview/PreviewTemplate';
 import type { PreviewTemplateId, PreviewViewportId } from '@/types/preview';
-import type { RatioPalette } from '@/types/palette';
+import type { ProjectPalette } from '@/types/palette';
 import type { VisionSimulationId } from '@/types/accessibility';
 
 interface PreviewPanelProps {
-  palette: RatioPalette;
+  palette: ProjectPalette;
   templateId: PreviewTemplateId;
   viewport: PreviewViewportId;
   visionMode: VisionSimulationId;
@@ -46,9 +46,11 @@ export function PreviewPanel({
         onVisionModeChange={onVisionModeChange}
       />
 
-      <PreviewFrame palette={palette} templateId={templateId} viewport={viewport} visionMode={visionMode}>
-        <PreviewTemplate templateId={templateId} />
-      </PreviewFrame>
+      <div className="min-h-0 flex-1">
+        <PreviewFrame palette={palette} templateId={templateId} viewport={viewport} visionMode={visionMode}>
+          <PreviewTemplate templateId={templateId} />
+        </PreviewFrame>
+      </div>
     </aside>
   );
 }

@@ -16,11 +16,11 @@ const RELATED = [
 
 export const ContentPreview = memo(function ContentPreview() {
   return (
-    <div className="min-h-full bg-[var(--preview-dominant)] text-[var(--preview-on-dominant)]">
+    <div className="min-h-full bg-[var(--preview-dominant)] text-[var(--preview-text)]">
       <PreviewHeader brand="The Journal" links={NAV_LINKS} cta="Subscribe" />
 
       <div className="flex flex-col gap-10 px-6 py-10 @lg:flex-row @lg:px-10 @lg:py-14">
-        <article className="flex-1 @5xl:max-w-2xl">
+        <article className="min-w-0 flex-1 @5xl:max-w-2xl">
           <span className="text-xs font-semibold uppercase tracking-wide opacity-60">
             Design systems
           </span>
@@ -76,7 +76,7 @@ export const ContentPreview = memo(function ContentPreview() {
         </aside>
       </div>
 
-      <footer className="flex flex-col gap-4 bg-[var(--preview-secondary)] px-6 py-8 text-[var(--preview-on-secondary)] @lg:flex-row @lg:items-center @lg:justify-between @lg:px-10">
+      <footer className="flex flex-col gap-4 bg-[var(--preview-secondary)] px-6 py-8 text-[var(--preview-text)] @lg:flex-row @lg:items-center @lg:justify-between @lg:px-10">
         <span className="text-sm font-semibold">The Journal</span>
         <PreviewNavigation links={['Privacy', 'Terms', 'Contact']} activeIndex={-1} />
       </footer>

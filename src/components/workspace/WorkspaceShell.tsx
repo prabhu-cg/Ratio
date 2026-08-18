@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { WorkspaceTopBar } from '@/components/workspace/WorkspaceTopBar';
 import { ControlsPanel } from '@/components/workspace/ControlsPanel';
 import { RatioVisualisation } from '@/components/workspace/RatioVisualisation';
@@ -23,8 +23,41 @@ export function WorkspaceShell() {
     resetVisionMode();
   }, [resetPalette, resetVisionMode]);
 
+  // The workspace is a fixed-viewport app shell — nothing outside the three columns
+  // (and the device preview canvas inside them) should ever scroll the page itself.
+  // Wheel input over an area with nothing scrollable under the cursor — like the
+  // topbar — has no local scroll container to consume it, so browsers hand it to the
+  // document as a fallback. CSS alone (overflow: hidden on <html>, overscroll-behavior)
+  // doesn't reliably stop that hand-off in every case, so this blocks it directly at
+  // the event level: any wheel event that didn't originate inside one of the
+  // legitimately-scrollable regions is simply prevented outright.
+  useEffect(() => {
+    const SCROLLABLE_SELECTOR = '.workspace-controls, .workspace-viz, .workspace-preview';
+
+    const handleWheel = (event: WheelEvent) => {
+      const target = event.target as Element | null;
+      if (!target?.closest(SCROLLABLE_SELECTOR)) {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener('wheel', handleWheel, { passive: false });
+
+    // Belt-and-suspenders for non-wheel scroll input (keyboard Page Down/spacebar,
+    // touch drag on a trackpad-less device): <html> is the actual scrolling element
+    // in a standards-mode document, so this is what needs to be non-scrollable.
+    const html = document.documentElement;
+    const previousOverflow = html.style.overflow;
+    html.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('wheel', handleWheel);
+      html.style.overflow = previousOverflow;
+    };
+  }, []);
+
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="flex h-dvh flex-col overflow-hidden">
       <a
         href="#workspace-main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-[var(--radius-sm)] focus:bg-brand focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-text-inverse"

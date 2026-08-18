@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { PreviewControls } from '@/components/preview/PreviewControls';
 
 describe('PreviewControls', () => {
-  it('marks the active template, viewport, and vision mode as selected', () => {
+  it('marks the active template and viewport as selected, and the vision mode as the select value', () => {
     render(
       <PreviewControls
         templateId="dashboard"
@@ -22,11 +22,7 @@ describe('PreviewControls', () => {
       'false',
     );
     expect(screen.getByRole('tab', { name: 'Tablet' })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getByRole('tab', { name: 'Deuteranopia' })).toHaveAttribute(
-      'aria-selected',
-      'true',
-    );
-    expect(screen.getByRole('tab', { name: 'Normal' })).toHaveAttribute('aria-selected', 'false');
+    expect(screen.getByRole('combobox', { name: 'Vision' })).toHaveValue('deuteranopia');
   });
 
   it('calls back immediately when a template, viewport, or vision mode is chosen', async () => {
@@ -52,7 +48,7 @@ describe('PreviewControls', () => {
     await user.click(screen.getByRole('tab', { name: 'Mobile' }));
     expect(onViewportChange).toHaveBeenCalledWith('mobile');
 
-    await user.click(screen.getByRole('tab', { name: 'Grayscale' }));
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Vision' }), 'grayscale');
     expect(onVisionModeChange).toHaveBeenCalledWith('grayscale');
   });
 });

@@ -1,13 +1,15 @@
 import { RatioStackVisual } from '@/components/marketing/RatioStackVisual';
 import { AccessibilityPanel } from '@/components/workspace/AccessibilityPanel';
 import { Divider } from '@/components/ui/Divider';
-import type { RatioPalette } from '@/types/palette';
+import type { ProjectPalette } from '@/types/palette';
 
 interface RatioVisualisationProps {
-  palette: RatioPalette;
+  palette: ProjectPalette;
 }
 
 export function RatioVisualisation({ palette }: RatioVisualisationProps) {
+  const { ratio } = palette;
+
   return (
     <section
       aria-label="Ratio visualisation"
@@ -18,12 +20,12 @@ export function RatioVisualisation({ palette }: RatioVisualisationProps) {
           2 · See the ratio
         </h2>
         <span className="font-mono text-xs text-text-muted">
-          {palette.dominant.percentage} / {palette.secondary.percentage} / {palette.accent.percentage}
+          {ratio.dominant.percentage} / {ratio.secondary.percentage} / {ratio.accent.percentage}
         </span>
       </div>
 
       <RatioStackVisual
-        palette={palette}
+        palette={ratio}
         orientation="horizontal"
         heightClassName="h-[280px] sm:h-[340px]"
         className="flex-none"

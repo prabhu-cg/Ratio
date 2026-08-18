@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { PREVIEW_TEMPLATES, PREVIEW_VIEWPORTS } from '@/types/preview';
 import type { PreviewTemplateId, PreviewViewportId } from '@/types/preview';
 import { VISION_SIMULATIONS } from '@/types/accessibility';
@@ -12,6 +13,10 @@ interface PreviewControlsProps {
   onVisionModeChange: (id: VisionSimulationId) => void;
 }
 
+const TEMPLATE_SEGMENT_ACTIVE = 'bg-brand text-text-inverse shadow-sm';
+const VIEWPORT_SEGMENT_ACTIVE = 'bg-ink-900 text-text-inverse shadow-sm';
+const SEGMENT_INACTIVE = 'text-text-muted hover:text-text-heading';
+
 export function PreviewControls({
   templateId,
   viewport,
@@ -20,9 +25,15 @@ export function PreviewControls({
   onViewportChange,
   onVisionModeChange,
 }: PreviewControlsProps) {
+  const visionLabelId = useId();
+
   return (
-    <div className="flex flex-col gap-2">
-      <div role="tablist" aria-label="Preview template" className="flex flex-wrap gap-1">
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <div
+        role="tablist"
+        aria-label="Preview template"
+        className="inline-flex items-center gap-0.5 rounded-[var(--radius-md)] border border-border-default bg-surface-alt p-0.5"
+      >
         {PREVIEW_TEMPLATES.map((option) => (
           <button
             key={option.id}
@@ -30,10 +41,8 @@ export function PreviewControls({
             role="tab"
             aria-selected={option.id === templateId}
             onClick={() => onTemplateChange(option.id)}
-            className={`rounded-[var(--radius-sm)] px-2.5 py-1.5 text-xs font-semibold transition-colors duration-150 ${
-              option.id === templateId
-                ? 'bg-brand text-text-inverse'
-                : 'bg-surface-alt text-text-muted hover:text-text-heading'
+            className={`rounded-[calc(var(--radius-md)-2px)] px-3 py-1.5 text-xs font-semibold transition-colors duration-150 ${
+              option.id === templateId ? TEMPLATE_SEGMENT_ACTIVE : SEGMENT_INACTIVE
             }`}
           >
             {option.label}
@@ -41,46 +50,49 @@ export function PreviewControls({
         ))}
       </div>
 
-      <div role="tablist" aria-label="Preview viewport" className="flex gap-1">
-        {PREVIEW_VIEWPORTS.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            role="tab"
-            aria-selected={option.id === viewport}
-            onClick={() => onViewportChange(option.id)}
-            className={`flex-1 rounded-[var(--radius-sm)] px-2.5 py-1.5 text-xs font-semibold transition-colors duration-150 ${
-              option.id === viewport
-                ? 'bg-ink-900 text-text-inverse'
-                : 'bg-surface-alt text-text-muted hover:text-text-heading'
-            }`}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-text-faint">
-          Vision
-        </span>
-        <div role="tablist" aria-label="Colour vision simulation" className="flex flex-wrap gap-1">
-          {VISION_SIMULATIONS.map((option) => (
+      <div className="flex items-center gap-3">
+        <div
+          role="tablist"
+          aria-label="Preview viewport"
+          className="inline-flex items-center gap-0.5 rounded-[var(--radius-md)] border border-border-default bg-surface-alt p-0.5"
+        >
+          {PREVIEW_VIEWPORTS.map((option) => (
             <button
               key={option.id}
               type="button"
               role="tab"
-              aria-selected={option.id === visionMode}
-              onClick={() => onVisionModeChange(option.id)}
-              className={`rounded-[var(--radius-sm)] px-2.5 py-1.5 text-xs font-semibold transition-colors duration-150 ${
-                option.id === visionMode
-                  ? 'bg-ink-900 text-text-inverse'
-                  : 'bg-surface-alt text-text-muted hover:text-text-heading'
+              aria-selected={option.id === viewport}
+              onClick={() => onViewportChange(option.id)}
+              className={`rounded-[calc(var(--radius-md)-2px)] px-3 py-1.5 text-xs font-semibold transition-colors duration-150 ${
+                option.id === viewport ? VIEWPORT_SEGMENT_ACTIVE : SEGMENT_INACTIVE
               }`}
             >
               {option.label}
             </button>
           ))}
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <label
+            id={visionLabelId}
+            htmlFor="preview-vision-select"
+            className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-text-faint"
+          >
+            Vision
+          </label>
+          <select
+            id="preview-vision-select"
+            aria-labelledby={visionLabelId}
+            value={visionMode}
+            onChange={(event) => onVisionModeChange(event.target.value as VisionSimulationId)}
+            className="rounded-[var(--radius-sm)] border border-border-strong bg-surface-alt px-2 py-1.5 text-xs font-semibold text-text-heading"
+          >
+            {VISION_SIMULATIONS.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </div>

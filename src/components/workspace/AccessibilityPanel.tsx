@@ -1,14 +1,17 @@
 import { useMemo } from 'react';
 import { ContrastCheckCard } from '@/components/workspace/accessibility/ContrastCheckCard';
 import { buildContrastChecks } from '@/lib/contrastChecks';
-import type { RatioPalette } from '@/types/palette';
+import type { ProjectPalette } from '@/types/palette';
 
 interface AccessibilityPanelProps {
-  palette: RatioPalette;
+  palette: ProjectPalette;
 }
 
 export function AccessibilityPanel({ palette }: AccessibilityPanelProps) {
-  const checks = useMemo(() => buildContrastChecks(palette), [palette]);
+  const checks = useMemo(
+    () => buildContrastChecks(palette.ratio, palette.supporting.text.colour.hex),
+    [palette],
+  );
   const reviewOrFailCount = checks.filter((check) => check.status !== 'good').length;
 
   return (

@@ -1,6 +1,7 @@
 .workspace-grid {
   display: grid;
   flex: 1;
+  min-height: 0;
   gap: 1px;
   background-color: var(--color-border-default);
   grid-template-columns: 1fr;
@@ -10,15 +11,33 @@
 @media (min-width: 768px) {
   .workspace-grid {
     grid-template-columns: 232px 1fr;
+    /* Two explicit, shrinkable rows — without this, 'auto' rows grow to fit each
+       column's full content height instead of the viewport, and the whole page
+       scrolls together instead of each column scrolling independently. */
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas: 'controls viz' 'controls preview';
   }
 }
 
 @media (min-width: 1024px) {
   .workspace-grid {
-    grid-template-columns: 272px 1fr 380px;
+    /* Preview gets the flexible share so it's always the largest column and grows
+       with the window; the ratio/accessibility column stays a comfortable fixed width. */
+    grid-template-columns: 272px 420px 1fr;
+    grid-template-rows: minmax(0, 1fr);
     grid-template-areas: 'controls viz preview';
   }
+}
+
+/*
+ * Without this, wheel/trackpad scrolling that reaches the bottom of one of these
+ * independently-scrolling columns "chains" to the document itself, scrolling the
+ * whole page (topbar included) instead of stopping at the column's own edge.
+ */
+.workspace-controls,
+.workspace-viz,
+.workspace-preview {
+  overscroll-behavior-y: contain;
 }
 
 .workspace-controls {
@@ -31,4 +50,16 @@
 
 .workspace-preview {
   grid-area: preview;
+}
+
+/*
+ * RATIO's own h1-h4 { color: var(--color-text-heading) } base rule would otherwise leak
+ * into the simulated project preview (it's a scaled div, not an iframe) and silently
+ * override the project's own Text / Foreground colour on every heading.
+ */
+.preview-canvas h1,
+.preview-canvas h2,
+.preview-canvas h3,
+.preview-canvas h4 {
+  color: inherit;
 }

@@ -1,4 +1,4 @@
-import { contrastRatioHex, pickReadableTextColor } from '@/lib/color';
+import { contrastRatioHex } from '@/lib/color';
 import { meetsWcag, contrastStatus } from '@/lib/wcag';
 import type { ContrastStatus } from '@/lib/wcag';
 import type { RatioPalette } from '@/types/palette';
@@ -48,61 +48,50 @@ function buildCheck(
 }
 
 /**
- * A fixed set of contrast relationships that map directly onto how the palette is
- * actually used elsewhere in RATIO (the workspace preview and the app's own text
- * colour choices) — not an arbitrary sweep of every colour against every other colour.
+ * Contrast relationships driven by the user's actual editable project colours — the
+ * 60/30/10 ratio surfaces plus the project's own Text / Foreground colour. This
+ * deliberately reports what the user picked, not an auto-optimised readable colour.
  */
-export function buildContrastChecks(palette: RatioPalette): ContrastCheckResult[] {
-  const dominantHex = palette.dominant.colour.hex;
-  const secondaryHex = palette.secondary.colour.hex;
-  const accentHex = palette.accent.colour.hex;
-
-  const onDominant = pickReadableTextColor(palette.dominant.colour.rgb);
-  const onSecondary = pickReadableTextColor(palette.secondary.colour.rgb);
-  const onAccent = pickReadableTextColor(palette.accent.colour.rgb);
+export function buildContrastChecks(ratio: RatioPalette, textHex: string): ContrastCheckResult[] {
+  const dominantHex = ratio.dominant.colour.hex;
+  const secondaryHex = ratio.secondary.colour.hex;
+  const accentHex = ratio.accent.colour.hex;
 
   return [
     buildCheck(
-      'primary-on-dominant',
-      'Primary text on Dominant',
-      "The text colour RATIO's preview uses directly on the dominant background.",
-      onDominant,
+      'text-on-dominant',
+      'Text on Dominant',
+      "Your project's Text / Foreground colour directly on the dominant background.",
+      textHex,
       dominantHex,
     ),
     buildCheck(
-      'primary-on-secondary',
-      'Primary text on Secondary',
+      'text-on-secondary',
+      'Text on Secondary',
       'Text inside secondary surfaces — cards, headers, sidebars.',
-      onSecondary,
+      textHex,
       secondaryHex,
     ),
     buildCheck(
-      'primary-on-accent',
-      'Primary text on Accent',
+      'text-on-accent',
+      'Text on Accent',
       'Text inside accent-coloured buttons and highlights.',
-      onAccent,
+      textHex,
       accentHex,
     ),
     buildCheck(
       'white-on-accent',
       'White on Accent',
-      'A common convention: white text on your accent colour, regardless of how light or dark it is.',
+      'A fixed reference, not your Text / Foreground colour: white is a common convention for button labels, regardless of how light or dark your accent is.',
       WHITE,
       accentHex,
     ),
     buildCheck(
       'dark-on-accent',
       'Dark text on Accent',
-      'The other common convention: near-black text on your accent colour.',
+      'Also a fixed reference: the other common convention is near-black button-label text, regardless of your Text / Foreground colour.',
       DARK_INK,
       accentHex,
-    ),
-    buildCheck(
-      'secondary-on-dominant',
-      'Secondary as text on Dominant',
-      'Your secondary colour used directly as text or icons on the dominant background.',
-      secondaryHex,
-      dominantHex,
     ),
   ];
 }

@@ -1,24 +1,21 @@
 import { useId, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { IconButton } from '@/components/ui/IconButton';
-import { CopyButton } from '@/components/ui/CopyButton';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { ColourDetails } from '@/components/workspace/ColourDetails';
-import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
-import { DEFAULT_HEX } from '@/types/palette';
-import type { RatioRole } from '@/types/palette';
+import type { RatioRole, SupportingRole } from '@/types/palette';
 
 interface ColourInputCardProps {
-  role: RatioRole;
+  role: RatioRole | SupportingRole;
+  defaultHex: string;
   onChangeHex: (hex: string) => boolean;
   onResetRole: () => void;
 }
 
-export function ColourInputCard({ role, onChangeHex, onResetRole }: ColourInputCardProps) {
+export function ColourInputCard({ role, defaultHex, onChangeHex, onResetRole }: ColourInputCardProps) {
   const [draft, setDraft] = useState(role.colour.hex);
   const [error, setError] = useState(false);
   const [syncedHex, setSyncedHex] = useState(role.colour.hex);
-  const { copy, copiedKey } = useCopyToClipboard();
   const descriptionId = useId();
   const inputId = useId();
   const pickerLabelId = useId();
@@ -39,7 +36,7 @@ export function ColourInputCard({ role, onChangeHex, onResetRole }: ColourInputC
     setError(!onChangeHex(trimmed));
   };
 
-  const isDefault = role.colour.hex === DEFAULT_HEX[role.id];
+  const isDefault = role.colour.hex === defaultHex;
 
   return (
     <div className="flex flex-col gap-3">
@@ -47,8 +44,14 @@ export function ColourInputCard({ role, onChangeHex, onResetRole }: ColourInputC
         <span id={pickerLabelId} className="text-sm font-semibold text-text-heading">
           {role.label}
         </span>
-        <span className="font-mono text-xs text-text-muted">{role.percentage}%</span>
+        {'percentage' in role ? (
+          <span className="font-mono text-xs text-text-muted">{role.percentage}%</span>
+        ) : null}
       </div>
+
+      <p id={descriptionId} className="text-xs leading-relaxed text-text-muted">
+        {role.description}
+      </p>
 
       <div className="flex items-center gap-2">
         <input
@@ -85,14 +88,13 @@ export function ColourInputCard({ role, onChangeHex, onResetRole }: ColourInputC
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <CopyButton
-          label={`Copy ${role.label} hex value`}
-          copied={copiedKey === 'quick-hex'}
-          onCopy={() => copy('quick-hex', role.colour.hex, `${role.label} hex`)}
-        />
+      <div className="flex items-start justify-between">
+        <ColourDetails colour={role.colour} roleLabel={role.label} />
 
-        <Tooltip content={isDefault ? `${role.label} is at its default colour` : `Reset ${role.label} to default`}>
+        <Tooltip
+          align="end"
+          content={isDefault ? `${role.label} is at its default colour` : `Reset ${role.label} to default`}
+        >
           <IconButton
             label={`Reset ${role.label} to default`}
             onClick={onResetRole}
@@ -116,12 +118,6 @@ export function ColourInputCard({ role, onChangeHex, onResetRole }: ColourInputC
           Enter a valid hex colour, like #C74504.
         </p>
       ) : null}
-
-      <p id={descriptionId} className="text-xs leading-relaxed text-text-muted">
-        {role.description}
-      </p>
-
-      <ColourDetails colour={role.colour} roleLabel={role.label} />
     </div>
   );
 }

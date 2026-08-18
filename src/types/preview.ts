@@ -20,7 +20,7 @@ export const PREVIEW_TEMPLATES: PreviewTemplateOption[] = [
 ];
 
 export const PREVIEW_VIEWPORTS: PreviewViewportOption[] = [
-  { id: 'desktop', label: 'Desktop', width: 1200 },
-  { id: 'tablet', label: 'Tablet', width: 834 },
-  { id: 'mobile', label: 'Mobile', width: 390 },
+  { id: 'desktop', label: 'Desktop', width: 1440 },
+  { id: 'tablet', label: 'Tablet', width: 768 },
+  { id: 'mobile', label: 'Mobile', width: 375 },
 ];

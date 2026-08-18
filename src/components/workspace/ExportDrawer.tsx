@@ -11,11 +11,11 @@ import {
   downloadBlob,
   downloadTextFile,
 } from '@/lib/exportFormats';
-import { paletteRoles } from '@/types/palette';
-import type { RatioPalette } from '@/types/palette';
+import { paletteRoles, supportingRoles } from '@/types/palette';
+import type { ProjectPalette } from '@/types/palette';
 
 interface ExportDrawerProps {
-  palette: RatioPalette;
+  palette: ProjectPalette;
   open: boolean;
   onClose: () => void;
 }
@@ -68,11 +68,11 @@ export function ExportDrawer({ palette, open, onClose }: ExportDrawerProps) {
   const json = buildJsonExport(palette);
 
   const handleDownloadSvg = () => {
-    downloadTextFile(buildPaletteSvg(palette), 'ratio-palette.svg', 'image/svg+xml');
+    downloadTextFile(buildPaletteSvg(palette.ratio), 'ratio-palette.svg', 'image/svg+xml');
   };
 
   const handleDownloadPng = async () => {
-    const blob = await buildPalettePngBlob(palette);
+    const blob = await buildPalettePngBlob(palette.ratio);
     if (blob) downloadBlob(blob, 'ratio-palette.png');
   };
 
@@ -116,7 +116,7 @@ export function ExportDrawer({ palette, open, onClose }: ExportDrawerProps) {
           </h3>
 
           <div className="flex flex-col gap-2">
-            {paletteRoles(palette).map((role) => (
+            {[...paletteRoles(palette.ratio), ...supportingRoles(palette.supporting)].map((role) => (
               <div
                 key={role.id}
                 className="flex items-center justify-between gap-2 rounded-[var(--radius-sm)] border border-border-default p-2.5"

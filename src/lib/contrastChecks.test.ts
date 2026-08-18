@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { buildContrastChecks } from '@/lib/contrastChecks';
-import { createDefaultPalette } from '@/types/palette';
-import { toColour } from '@/lib/color';
+import { createDefaultPalette, DEFAULT_SUPPORTING_HEX } from '@/types/palette';
+
+const DEFAULT_TEXT = DEFAULT_SUPPORTING_HEX.text;
 
 describe('buildContrastChecks', () => {
-  it('returns exactly the six purposeful relationships, each above 1:1 and at most 21:1', () => {
-    const checks = buildContrastChecks(createDefaultPalette());
+  it('returns exactly the five purposeful relationships, each above 1:1 and at most 21:1', () => {
+    const checks = buildContrastChecks(createDefaultPalette(), DEFAULT_TEXT);
 
     expect(checks.map((check) => check.id)).toEqual([
-      'primary-on-dominant',
-      'primary-on-secondary',
-      'primary-on-accent',
+      'text-on-dominant',
+      'text-on-secondary',
+      'text-on-accent',
       'white-on-accent',
       'dark-on-accent',
-      'secondary-on-dominant',
     ]);
 
     for (const check of checks) {
@@ -23,13 +23,25 @@ describe('buildContrastChecks', () => {
     }
   });
 
-  it('matches the pairing from the spec (secondary text on dominant): a strong pass', () => {
+  it("drives the 'Text on X' checks from the passed-in project text colour, not an auto-picked one", () => {
+    const checks = buildContrastChecks(createDefaultPalette(), '#00FF00');
+
+    const onDominant = checks.find((c) => c.id === 'text-on-dominant');
+    const onSecondary = checks.find((c) => c.id === 'text-on-secondary');
+    const onAccent = checks.find((c) => c.id === 'text-on-accent');
+
+    expect(onDominant?.fgHex).toBe('#00FF00');
+    expect(onSecondary?.fgHex).toBe('#00FF00');
+    expect(onAccent?.fgHex).toBe('#00FF00');
+  });
+
+  it('matches the default Text on Dominant pairing: a strong pass', () => {
     // The spec's own worked example quotes "7.1:1" for #444444 on #F7F5F0, but the
     // standard WCAG relative-luminance formula gives ~8.94:1 for that exact pair —
     // verified independently outside this codebase. Treated as illustrative spec
     // copy rather than a precise fixture; asserting the real, correct value here.
-    const checks = buildContrastChecks(createDefaultPalette());
-    const check = checks.find((c) => c.id === 'secondary-on-dominant');
+    const checks = buildContrastChecks(createDefaultPalette(), DEFAULT_TEXT);
+    const check = checks.find((c) => c.id === 'text-on-dominant');
 
     expect(check).toBeDefined();
     expect(check?.fgHex).toBe('#444444');
@@ -40,38 +52,28 @@ describe('buildContrastChecks', () => {
     expect(check?.aaaNormal).toBe(true);
   });
 
-  it('flags the default accent-on-dominant style pairing as review-worthy, not a hard fail', () => {
-    const checks = buildContrastChecks(createDefaultPalette());
-    // Accent text directly on the dominant background isn't one of the six checks,
-    // but "white on accent" mirrors the spec's worked example ratio (~4.2:1) closely
-    // enough in spirit: it should land in the review band, not good or fail.
+  it('flags the default accent pairing as review-worthy, not a hard fail', () => {
+    const checks = buildContrastChecks(createDefaultPalette(), DEFAULT_TEXT);
     const whiteOnAccent = checks.find((c) => c.id === 'white-on-accent');
     expect(whiteOnAccent?.status).not.toBe('fail');
   });
 
   it('recomputes immediately when the palette changes', () => {
     const palette = createDefaultPalette();
-    const before = buildContrastChecks(palette);
+    const before = buildContrastChecks(palette, DEFAULT_TEXT);
 
-    const customSecondary = toColour('#F0EEE8');
-    if (!customSecondary) throw new Error('expected a valid colour');
-    palette.secondary = { ...palette.secondary, colour: customSecondary };
-
-    const after = buildContrastChecks(palette);
-
-    const beforeCheck = before.find((c) => c.id === 'secondary-on-dominant');
-    const afterCheck = after.find((c) => c.id === 'secondary-on-dominant');
+    const badTextOnDominant = buildContrastChecks(palette, '#F7F6F4');
+    const beforeCheck = before.find((c) => c.id === 'text-on-dominant');
+    const afterCheck = badTextOnDominant.find((c) => c.id === 'text-on-dominant');
 
     expect(afterCheck?.ratio).not.toBeCloseTo(beforeCheck?.ratio ?? 0, 1);
     expect(afterCheck?.status).toBe('fail');
   });
 
-  it('handles identical dominant and secondary colours without throwing (1:1 edge case)', () => {
+  it('handles identical text and dominant colours without throwing (1:1 edge case)', () => {
     const palette = createDefaultPalette();
-    palette.secondary = { ...palette.secondary, colour: palette.dominant.colour };
-
-    const checks = buildContrastChecks(palette);
-    const check = checks.find((c) => c.id === 'secondary-on-dominant');
+    const checks = buildContrastChecks(palette, palette.dominant.colour.hex);
+    const check = checks.find((c) => c.id === 'text-on-dominant');
 
     expect(check?.ratio).toBeCloseTo(1, 5);
     expect(check?.status).toBe('fail');

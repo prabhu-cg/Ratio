@@ -13,8 +13,8 @@ const base =
 const variants: Record<'primary' | 'secondary' | 'ghost', string> = {
   primary: 'bg-[var(--preview-accent)] text-[var(--preview-on-accent)] px-4 py-2',
   secondary:
-    'border border-current bg-transparent text-[var(--preview-on-dominant)] px-4 py-2',
-  ghost: 'bg-transparent text-[var(--preview-on-dominant)] underline underline-offset-4 px-0 py-1',
+    'border border-current bg-transparent text-[var(--preview-text)] px-4 py-2',
+  ghost: 'bg-transparent text-[var(--preview-text)] underline underline-offset-4 px-0 py-1',
 };
 
 export function PreviewButton({

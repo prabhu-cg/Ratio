@@ -32,7 +32,7 @@ describe('RatioStackVisual', () => {
 
     expect(
       screen.getByRole('img', {
-        name: /60% Dominant, #F7F5F0.*30% Secondary, #444444.*10% Accent, #C74504/,
+        name: /60% Dominant, #F7F5F0.*30% Secondary, #D9D4CC.*10% Accent, #C74504/,
       }),
     ).toBeInTheDocument();
   });

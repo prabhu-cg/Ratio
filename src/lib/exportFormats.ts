@@ -1,21 +1,25 @@
-import type { RatioPalette } from '@/types/palette';
+import type { ProjectPalette, RatioPalette } from '@/types/palette';
 
-export function buildCssVariables(palette: RatioPalette): string {
+export function buildCssVariables(palette: ProjectPalette): string {
   return `:root {
-  --ratio-dominant: ${palette.dominant.colour.hex};
-  --ratio-secondary: ${palette.secondary.colour.hex};
-  --ratio-accent: ${palette.accent.colour.hex};
+  --ratio-dominant: ${palette.ratio.dominant.colour.hex};
+  --ratio-secondary: ${palette.ratio.secondary.colour.hex};
+  --ratio-accent: ${palette.ratio.accent.colour.hex};
+  --ratio-text: ${palette.supporting.text.colour.hex};
 }
 `;
 }
 
-export function buildJsonExport(palette: RatioPalette): string {
+export function buildJsonExport(palette: ProjectPalette): string {
   const data = {
     brand: 'RATIO',
     ratio: {
-      dominant: palette.dominant.colour.hex,
-      secondary: palette.secondary.colour.hex,
-      accent: palette.accent.colour.hex,
+      dominant: palette.ratio.dominant.colour.hex,
+      secondary: palette.ratio.secondary.colour.hex,
+      accent: palette.ratio.accent.colour.hex,
+    },
+    supporting: {
+      text: palette.supporting.text.colour.hex,
     },
   };
   return `${JSON.stringify(data, null, 2)}\n`;

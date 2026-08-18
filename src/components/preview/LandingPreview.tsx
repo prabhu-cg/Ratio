@@ -23,7 +23,7 @@ const STATS = [
 
 export const LandingPreview = memo(function LandingPreview() {
   return (
-    <div className="min-h-full bg-[var(--preview-dominant)] text-[var(--preview-on-dominant)]">
+    <div className="min-h-full bg-[var(--preview-dominant)] text-[var(--preview-text)]">
       <PreviewHeader brand="Acme" links={NAV_LINKS} cta="Sign in" />
 
       <PreviewSection className="flex flex-col items-start gap-5">
@@ -52,7 +52,7 @@ export const LandingPreview = memo(function LandingPreview() {
         ))}
       </PreviewSection>
 
-      <PreviewSection className="flex flex-col gap-6 border-t border-[var(--preview-on-dominant)]/10 @lg:flex-row @lg:items-center @lg:justify-between">
+      <PreviewSection className="flex flex-col gap-6 border-t border-[var(--preview-text)]/10 @lg:flex-row @lg:items-center @lg:justify-between">
         <div>
           <h2 className="text-xl font-bold">Trusted by teams everywhere</h2>
           <p className="mt-2 max-w-sm text-sm opacity-80">
@@ -70,7 +70,7 @@ export const LandingPreview = memo(function LandingPreview() {
         </div>
       </PreviewSection>
 
-      <footer className="flex flex-col gap-4 bg-[var(--preview-secondary)] px-6 py-8 text-[var(--preview-on-secondary)] @lg:flex-row @lg:items-center @lg:justify-between @lg:px-10">
+      <footer className="flex flex-col gap-4 bg-[var(--preview-secondary)] px-6 py-8 text-[var(--preview-text)] @lg:flex-row @lg:items-center @lg:justify-between @lg:px-10">
         <span className="text-sm font-semibold">Acme</span>
         <PreviewNavigation links={['Privacy', 'Terms', 'Contact']} activeIndex={-1} />
       </footer>

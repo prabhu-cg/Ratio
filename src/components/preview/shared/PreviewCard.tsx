@@ -7,7 +7,7 @@ interface PreviewCardProps extends HTMLAttributes<HTMLDivElement> {
 export function PreviewCard({ children, className = '', ...rest }: PreviewCardProps) {
   return (
     <div
-      className={`rounded-lg bg-[var(--preview-secondary)] p-5 text-[var(--preview-on-secondary)] ${className}`}
+      className={`rounded-lg bg-[var(--preview-secondary)] p-5 text-[var(--preview-text)] ${className}`}
       {...rest}
     >
       {children}

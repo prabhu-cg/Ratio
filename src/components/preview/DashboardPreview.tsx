@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { PreviewButton, PreviewCard, PreviewNavigation } from '@/components/preview/shared';
+import { PreviewButton, PreviewCard, PreviewMenuIcon, PreviewNavigation } from '@/components/preview/shared';
 
 const SIDEBAR_LINKS = ['Overview', 'Projects', 'Activity', 'Reports', 'Settings'];
 const DATE_RANGES = ['This week', 'This month', 'This quarter'];
@@ -21,24 +21,25 @@ export const DashboardPreview = memo(function DashboardPreview() {
   const [activeRange, setActiveRange] = useState(0);
 
   return (
-    <div className="flex min-h-full bg-[var(--preview-dominant)] text-[var(--preview-on-dominant)]">
-      <aside className="hidden flex-none flex-col gap-8 bg-[var(--preview-secondary)] px-5 py-6 text-[var(--preview-on-secondary)] @5xl:flex @5xl:w-56">
+    <div className="flex min-h-full bg-[var(--preview-dominant)] text-[var(--preview-text)]">
+      <aside className="hidden flex-none flex-col gap-8 bg-[var(--preview-secondary)] px-5 py-6 text-[var(--preview-text)] @5xl:flex @5xl:w-56">
         <span className="text-base font-bold">Acme</span>
         <PreviewNavigation links={SIDEBAR_LINKS} orientation="vertical" activeIndex={0} />
       </aside>
 
-      <div className="flex flex-1 flex-col">
-        <div className="flex items-center justify-between gap-4 bg-[var(--preview-secondary)] px-5 py-4 text-[var(--preview-on-secondary)] @5xl:bg-transparent @5xl:px-8 @5xl:py-6 @5xl:text-[var(--preview-on-dominant)]">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex items-center justify-between gap-4 bg-[var(--preview-secondary)] px-5 py-4 text-[var(--preview-text)] @5xl:bg-transparent @5xl:px-8 @5xl:py-6 @5xl:text-[var(--preview-text)]">
           <span className="text-base font-bold @5xl:hidden">Acme</span>
           <h1 className="hidden text-xl font-bold @5xl:block">Overview</h1>
           <PreviewButton variant="primary" className="hidden! @lg:inline-flex!">
             New project
           </PreviewButton>
+          <PreviewMenuIcon className="@lg:hidden" />
         </div>
 
         <nav
           aria-label="Sections"
-          className="flex gap-2 overflow-x-auto border-b border-[var(--preview-on-dominant)]/10 px-5 py-3 @5xl:hidden"
+          className="flex gap-2 overflow-x-auto border-b border-[var(--preview-text)]/10 px-5 py-3 @5xl:hidden"
         >
           {SIDEBAR_LINKS.map((link, index) => (
             <span
@@ -46,7 +47,7 @@ export const DashboardPreview = memo(function DashboardPreview() {
               className={`flex-none rounded-full px-3 py-1.5 text-xs font-semibold ${
                 index === 0
                   ? 'bg-[var(--preview-accent)] text-[var(--preview-on-accent)]'
-                  : 'bg-[var(--preview-on-dominant)]/5 opacity-70'
+                  : 'bg-[var(--preview-text)]/5 opacity-70'
               }`}
             >
               {link}
@@ -72,7 +73,7 @@ export const DashboardPreview = memo(function DashboardPreview() {
             <div
               role="tablist"
               aria-label="Date range"
-              className="flex gap-1 border-b border-[var(--preview-on-dominant)]/10"
+              className="flex gap-1 border-b border-[var(--preview-text)]/10"
             >
               {DATE_RANGES.map((range, index) => (
                 <button
@@ -92,8 +93,8 @@ export const DashboardPreview = memo(function DashboardPreview() {
               ))}
             </div>
 
-            <div className="overflow-hidden rounded-lg border border-[var(--preview-on-dominant)]/10">
-              <div className="hidden grid-cols-[1fr_auto_auto] gap-4 bg-[var(--preview-on-dominant)]/5 px-4 py-2 text-xs font-semibold uppercase tracking-wide opacity-60 @lg:grid">
+            <div className="overflow-hidden rounded-lg border border-[var(--preview-text)]/10">
+              <div className="hidden grid-cols-[1fr_auto_auto] gap-4 bg-[var(--preview-text)]/5 px-4 py-2 text-xs font-semibold uppercase tracking-wide opacity-60 @lg:grid">
                 <span>Project</span>
                 <span>Owner</span>
                 <span>Status</span>
@@ -102,7 +103,7 @@ export const DashboardPreview = memo(function DashboardPreview() {
                 <div
                   key={row.name}
                   className={`flex flex-col gap-1 px-4 py-3 @lg:grid @lg:grid-cols-[1fr_auto_auto] @lg:items-center @lg:gap-4 ${
-                    index !== 0 ? 'border-t border-[var(--preview-on-dominant)]/10' : ''
+                    index !== 0 ? 'border-t border-[var(--preview-text)]/10' : ''
                   }`}
                 >
                   <span className="text-sm font-medium">{row.name}</span>
