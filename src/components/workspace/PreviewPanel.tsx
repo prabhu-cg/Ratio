@@ -40,16 +40,18 @@ export function PreviewPanel({
       aria-label="Live preview"
       className="workspace-preview flex flex-col gap-4 overflow-y-auto overflow-x-hidden bg-surface-card p-5 sm:p-8"
     >
-      <div className="relative flex flex-col gap-1 pr-14">
-        <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-text-muted">
-          4 · Preview
-        </h2>
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-text-muted">
+            4 · Preview
+          </h2>
+          <Badge tone="brand" className="flex-none">
+            Live
+          </Badge>
+        </div>
         <p className="text-sm text-text-muted">
           See how your colours behave in a realistic interface.
         </p>
-        <Badge tone="brand" className="absolute right-0 top-0">
-          Live
-        </Badge>
       </div>
 
       <PreviewControls

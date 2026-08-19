@@ -157,8 +157,10 @@ export function GuidePanel({ open, onClose }: GuidePanelProps) {
               ))}
             </div>
           </div>
+        </div>
 
-          <Button variant="primary" size="md" onClick={onClose} className="w-full sm:w-auto sm:self-end">
+        <div className="flex flex-none justify-end border-t border-border-default p-6 pt-5 sm:p-8 sm:pt-6">
+          <Button variant="primary" size="md" onClick={onClose} className="w-full sm:w-auto">
             Get started
           </Button>
         </div>
