@@ -1,4 +1,5 @@
 import type { AnyRoleId } from '@/types/palette';
+import type { UsageContextId } from '@/types/usageContext';
 
 /**
  * Static, application-level metadata for one of RATIO's four colour roles
@@ -39,4 +40,11 @@ export interface UsageItem {
   applicableRole: AnyRoleId;
   /** Present only for the subset of items worth illustrating visually. */
   visualExample?: UsageVisualExampleKind;
+  /**
+   * Design contexts this item is specifically emphasised in (Marketing,
+   * SaaS, ...). Omitted (or empty) means the item isn't singled out for
+   * any particular context — it still shows up under "General", which
+   * always shows the full catalogue regardless of this field.
+   */
+  contexts?: UsageContextId[];
 }

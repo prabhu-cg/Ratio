@@ -140,10 +140,10 @@ describe('display helpers', () => {
   });
 
   it('counts catalogued usage items per role, matching the usage catalogue', () => {
-    expect(getRoleUsageCount(getColourRole('dominant'))).toBe(3);
-    expect(getRoleUsageCount(getColourRole('secondary'))).toBe(3);
-    expect(getRoleUsageCount(getColourRole('accent'))).toBe(5);
-    expect(getRoleUsageCount(getColourRole('text'))).toBe(4);
+    expect(getRoleUsageCount(getColourRole('dominant'))).toBe(5);
+    expect(getRoleUsageCount(getColourRole('secondary'))).toBe(7);
+    expect(getRoleUsageCount(getColourRole('accent'))).toBe(7);
+    expect(getRoleUsageCount(getColourRole('text'))).toBe(8);
   });
 
   it('bundles every display field into one object via getRoleDisplay', () => {
@@ -153,7 +153,7 @@ describe('display helpers', () => {
       name: 'Accent',
       ratioLabel: '10% of visual hierarchy',
       purpose: 'Creates emphasis and draws attention.',
-      usageCount: 5,
+      usageCount: 7,
       includedInRatio: true,
     });
   });

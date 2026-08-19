@@ -4,11 +4,15 @@ import { Button } from '@/components/ui/Button';
 import { IconButton } from '@/components/ui/IconButton';
 import { Badge } from '@/components/ui/Badge';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { useUsageContext } from '@/hooks/useUsageContext';
 import { listColourRoles, getRoleColourHex, getRoleDisplay } from '@/lib/colourRoles';
-import { getUsageItemsForRole } from '@/lib/usageItems';
+import { getUsageItemsForRoleAndContext } from '@/lib/usageItems';
+import { USAGE_CONTEXTS, getUsageContext } from '@/lib/usageContexts';
 import { UsageVisualExample } from '@/components/workspace/usage/UsageVisualExample';
+import { ContextPreview } from '@/components/workspace/usage/ContextPreview';
 import type { AnyRoleId, ProjectPalette } from '@/types/palette';
 import type { UsageCategory } from '@/types/colourRole';
+import type { UsageContextId } from '@/types/usageContext';
 
 interface ColourUsagePanelProps {
   open: boolean;
@@ -26,17 +30,23 @@ const CATEGORY_LABEL: Record<UsageCategory, string> = {
 };
 
 /**
- * The interactive Colour Usage Map (V1.9.2). Builds entirely on the
- * V1.9.1 role registry and usage catalogue (src/lib/colourRoles.ts,
- * src/lib/usageItems.ts) — this file only adds interaction and
- * presentation, never a second copy of that data. A right-anchored
- * drawer (matching ExportDrawer) rather than another centred modal, so
- * this doesn't stack on top of the Guide modal as more "modal overload".
+ * The interactive Colour Usage Map (V1.9.2), now with selectable design
+ * contexts (V1.9.3). Builds entirely on the existing role registry and
+ * usage catalogue (src/lib/colourRoles.ts, src/lib/usageItems.ts) — this
+ * file only adds interaction and presentation, never a second copy of
+ * that data. A right-anchored drawer (matching ExportDrawer) rather than
+ * another centred modal, so this doesn't stack on top of the Guide modal
+ * as more "modal overload".
+ *
+ * The selected context only changes which usage items are shown and how
+ * the illustrative examples look — it never touches the project palette,
+ * the 60/30/10 ratio, palette insights, or accessibility results.
  */
 export function ColourUsagePanel({ open, onClose, palette }: ColourUsagePanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<AnyRoleId>('dominant');
+  const { contextId, setContextId } = useUsageContext();
   const baseId = useId();
 
   useFocusTrap(open, panelRef, closeButtonRef, onClose);
@@ -52,7 +62,8 @@ export function ColourUsagePanel({ open, onClose, palette }: ColourUsagePanelPro
   const selectedRole = roles[selectedIndex];
   const selectedDisplay = getRoleDisplay(selectedRole);
   const selectedColourHex = getRoleColourHex(palette, selectedRole.id);
-  const usageItems = getUsageItemsForRole(selectedRole.id);
+  const usageItems = getUsageItemsForRoleAndContext(selectedRole.id, contextId);
+  const currentContext = getUsageContext(contextId);
 
   const handleTablistKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
@@ -101,6 +112,47 @@ export function ColourUsagePanel({ open, onClose, palette }: ColourUsagePanelPro
             depending on the product and context. The 60–30–10 principle describes visual hierarchy,
             not a strict requirement for every interface element.
           </p>
+
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5">
+                <label
+                  id={`${baseId}-context-label`}
+                  htmlFor={`${baseId}-context-select`}
+                  className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-text-faint"
+                >
+                  Context
+                </label>
+                <select
+                  id={`${baseId}-context-select`}
+                  aria-labelledby={`${baseId}-context-label`}
+                  value={contextId}
+                  onChange={(event) => setContextId(event.target.value as UsageContextId)}
+                  className="rounded-[var(--radius-sm)] border border-border-strong bg-surface-alt px-2 py-1.5 text-xs font-semibold text-text-heading"
+                >
+                  {USAGE_CONTEXTS.map((context) => (
+                    <option key={context.id} value={context.id}>
+                      {context.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <p className="text-[11px] leading-relaxed text-text-faint">
+                Changes how the colours are illustrated, not the colours themselves.
+              </p>
+            </div>
+
+            <p className="text-xs leading-relaxed text-text-muted">{currentContext.description}</p>
+
+            <div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-text-faint">
+                Context preview
+              </p>
+              <div className="mt-1.5">
+                <ContextPreview contextId={contextId} palette={palette} />
+              </div>
+            </div>
+          </div>
 
           <div
             role="tablist"

@@ -2,10 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   USAGE_ITEMS,
   getUsageItemsForRole,
+  getUsageItemsForRoleAndContext,
   getUsageItemsForRoleByCategory,
   getUsageItemCount,
 } from '@/lib/usageItems';
 import { COLOUR_ROLE_ORDER } from '@/lib/colourRoles';
+import { USAGE_CONTEXTS } from '@/lib/usageContexts';
+import type { UsageContextId } from '@/types/usageContext';
 
 describe('usage item catalogue', () => {
   it('never duplicates an id, even across roles', () => {
@@ -51,5 +54,65 @@ describe('usage item catalogue', () => {
     for (const id of COLOUR_ROLE_ORDER) {
       expect(getUsageItemCount(id)).toBe(getUsageItemsForRole(id).length);
     }
+  });
+
+  describe('getUsageItemsForRoleAndContext', () => {
+    it('General always returns the full, unfiltered catalogue for a role', () => {
+      for (const id of COLOUR_ROLE_ORDER) {
+        expect(getUsageItemsForRoleAndContext(id, 'general')).toEqual(getUsageItemsForRole(id));
+      }
+    });
+
+    it('every non-general context returns at least one item per role, matching its tagged subset', () => {
+      const nonGeneralContexts = USAGE_CONTEXTS.map((context) => context.id).filter(
+        (id): id is UsageContextId => id !== 'general',
+      );
+
+      for (const contextId of nonGeneralContexts) {
+        for (const roleId of COLOUR_ROLE_ORDER) {
+          const items = getUsageItemsForRoleAndContext(roleId, contextId);
+          expect(items.length).toBeGreaterThan(0);
+          expect(items.every((item) => item.applicableRole === roleId)).toBe(true);
+          expect(items.every((item) => item.contexts?.includes(contextId))).toBe(true);
+        }
+      }
+    });
+
+    it('a non-general context never returns more items than General for the same role', () => {
+      for (const roleId of COLOUR_ROLE_ORDER) {
+        const generalCount = getUsageItemsForRoleAndContext(roleId, 'general').length;
+        for (const contextId of ['marketing', 'saas', 'mobile', 'editorial'] as const) {
+          expect(getUsageItemsForRoleAndContext(roleId, contextId).length).toBeLessThanOrEqual(generalCount);
+        }
+      }
+    });
+
+    it('matches the exact per-role counts specified for Marketing Website', () => {
+      expect(getUsageItemsForRoleAndContext('dominant', 'marketing')).toHaveLength(2);
+      expect(getUsageItemsForRoleAndContext('secondary', 'marketing')).toHaveLength(2);
+      expect(getUsageItemsForRoleAndContext('accent', 'marketing')).toHaveLength(3);
+      expect(getUsageItemsForRoleAndContext('text', 'marketing')).toHaveLength(2);
+    });
+
+    it('matches the exact per-role counts specified for SaaS / Product', () => {
+      expect(getUsageItemsForRoleAndContext('dominant', 'saas')).toHaveLength(2);
+      expect(getUsageItemsForRoleAndContext('secondary', 'saas')).toHaveLength(3);
+      expect(getUsageItemsForRoleAndContext('accent', 'saas')).toHaveLength(3);
+      expect(getUsageItemsForRoleAndContext('text', 'saas')).toHaveLength(3);
+    });
+
+    it('matches the exact per-role counts specified for Mobile App', () => {
+      expect(getUsageItemsForRoleAndContext('dominant', 'mobile')).toHaveLength(1);
+      expect(getUsageItemsForRoleAndContext('secondary', 'mobile')).toHaveLength(3);
+      expect(getUsageItemsForRoleAndContext('accent', 'mobile')).toHaveLength(2);
+      expect(getUsageItemsForRoleAndContext('text', 'mobile')).toHaveLength(3);
+    });
+
+    it('matches the exact per-role counts specified for Editorial / Content', () => {
+      expect(getUsageItemsForRoleAndContext('dominant', 'editorial')).toHaveLength(2);
+      expect(getUsageItemsForRoleAndContext('secondary', 'editorial')).toHaveLength(2);
+      expect(getUsageItemsForRoleAndContext('accent', 'editorial')).toHaveLength(3);
+      expect(getUsageItemsForRoleAndContext('text', 'editorial')).toHaveLength(3);
+    });
   });
 });

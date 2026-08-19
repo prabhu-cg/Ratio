@@ -307,5 +307,22 @@ describe('WorkspaceShell', () => {
       const dialog = screen.getByRole('dialog', { name: 'Colour usage' });
       expect(within(dialog).getByRole('tabpanel')).toHaveTextContent('#00A86B');
     });
+
+    it('switching design context leaves the palette, ratio visualisation, and accessibility results untouched', async () => {
+      const user = userEvent.setup();
+      skipOnboarding();
+      renderWorkspace();
+
+      const ratioBefore = screen.getByRole('img', { name: /60% Dominant, #F7F5F0/ });
+      const accessibilityBefore = screen.getByText('2 of 5 to review');
+
+      await user.click(screen.getByRole('button', { name: 'Explore colour usage' }));
+      await user.selectOptions(screen.getByLabelText('Context'), 'marketing');
+      await user.click(screen.getByRole('button', { name: 'Close colour usage' }));
+
+      expect(screen.getByLabelText('Dominant hex value')).toHaveValue('#F7F5F0');
+      expect(ratioBefore).toBeInTheDocument();
+      expect(accessibilityBefore).toBeInTheDocument();
+    });
   });
 });

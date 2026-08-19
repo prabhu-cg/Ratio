@@ -14,6 +14,7 @@ export interface PersistedWorkspaceState {
   template?: string;
   viewport?: string;
   visionMode?: string;
+  usageContext?: string;
 }
 
 function isStorageAvailable(): boolean {
