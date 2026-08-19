@@ -8,9 +8,11 @@ describe('AccessibilityPanel', () => {
   it('shows all five contrast checks for the default palette', () => {
     render(<AccessibilityPanel palette={createDefaultProjectPalette()} />);
 
-    expect(screen.getByText('Text on Dominant')).toBeInTheDocument();
-    expect(screen.getByText('Text on Secondary')).toBeInTheDocument();
-    expect(screen.getByText('Text on Accent')).toBeInTheDocument();
+    // "Text on X" also appears in the Palette Insights breakdown below, so these
+    // three are scoped to the check card's <h4> label specifically.
+    expect(screen.getByRole('heading', { level: 4, name: 'Text on Dominant' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 4, name: 'Text on Secondary' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 4, name: 'Text on Accent' })).toBeInTheDocument();
     expect(screen.getByText('White on Accent')).toBeInTheDocument();
     expect(screen.getByText('Dark text on Accent')).toBeInTheDocument();
   });

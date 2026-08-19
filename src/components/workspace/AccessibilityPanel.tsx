@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { ContrastCheckCard } from '@/components/workspace/accessibility/ContrastCheckCard';
+import { PaletteInsightsSection } from '@/components/workspace/insights/PaletteInsightsSection';
 import { buildContrastChecks } from '@/lib/contrastChecks';
 import type { ProjectPalette } from '@/types/palette';
 
@@ -76,6 +77,8 @@ export function AccessibilityPanel({ palette }: AccessibilityPanelProps) {
           <ContrastCheckCard key={check.id} check={check} />
         ))}
       </div>
+
+      <PaletteInsightsSection palette={palette} />
     </section>
   );
 }
