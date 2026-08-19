@@ -248,4 +248,47 @@ describe('ColourUsagePanel', () => {
       expect(screen.getByLabelText('Context')).toHaveValue('general');
     });
   });
+
+  describe('V1.9.4 QA pass', () => {
+    it('presents role selection before context selection, matching the "role → meaning → usage → context" reading order', () => {
+      render(<ColourUsagePanel open onClose={vi.fn()} palette={createDefaultProjectPalette()} />);
+
+      const roleTablist = screen.getByRole('tablist', { name: 'Colour role' });
+      const contextSelect = screen.getByLabelText('Context');
+
+      // DOCUMENT_POSITION_FOLLOWING means roleTablist comes first in the DOM.
+      expect(roleTablist.compareDocumentPosition(contextSelect) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    it('places the context controls immediately above the Common uses list they affect', () => {
+      render(<ColourUsagePanel open onClose={vi.fn()} palette={createDefaultProjectPalette()} />);
+
+      const contextSelect = screen.getByLabelText('Context');
+      const commonUsesHeading = screen.getByText('Common uses');
+
+      expect(contextSelect.compareDocumentPosition(commonUsesHeading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    it('never exposes decorative mockup text as separate accessible content — every child of a role="img" example is aria-hidden', async () => {
+      const user = userEvent.setup();
+      render(<ColourUsagePanel open onClose={vi.fn()} palette={createDefaultProjectPalette()} />);
+
+      // The context preview is always present.
+      const images = () => screen.getAllByRole('img', { hidden: false });
+
+      const checkAllChildrenHidden = () => {
+        for (const img of images()) {
+          for (const child of Array.from(img.children)) {
+            expect(child).toHaveAttribute('aria-hidden', 'true');
+          }
+        }
+      };
+
+      checkAllChildrenHidden();
+
+      // Expand a usage item with a visual example too (adds a second role="img").
+      await user.click(screen.getByText('Page background'));
+      checkAllChildrenHidden();
+    });
+  });
 });

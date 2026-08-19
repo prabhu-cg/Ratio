@@ -325,4 +325,33 @@ describe('WorkspaceShell', () => {
       expect(accessibilityBefore).toBeInTheDocument();
     });
   });
+
+  describe('state consistency across surfaces (V1.9.4 QA)', () => {
+    it('a single Accent change is reflected simultaneously in the Usage Map, ratio visualisation, accessibility, and export — one source of truth, no stale values', async () => {
+      const user = userEvent.setup();
+      skipOnboarding();
+      renderWorkspace();
+
+      const accentInput = screen.getByLabelText('Accent hex value');
+      await user.clear(accentInput);
+      await user.type(accentInput, '#2563EB');
+      await user.tab();
+
+      // Ratio visualisation
+      expect(screen.getByRole('img', { name: /#2563EB/ })).toBeInTheDocument();
+
+      // Accessibility (Accent-driven checks recompute against the new hex)
+      expect(screen.getByText('#444444 on #2563EB')).toBeInTheDocument();
+
+      // Colour Usage Map
+      await user.click(screen.getByRole('button', { name: 'Explore colour usage' }));
+      await user.click(screen.getByRole('tab', { name: 'Accent' }));
+      expect(screen.getByRole('tabpanel')).toHaveTextContent('#2563EB');
+      await user.click(screen.getByRole('button', { name: 'Close colour usage' }));
+
+      // Export
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+      expect(screen.getByText('#2563EB')).toBeInTheDocument();
+    });
+  });
 });

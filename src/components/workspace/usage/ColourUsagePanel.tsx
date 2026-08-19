@@ -113,47 +113,6 @@ export function ColourUsagePanel({ open, onClose, palette }: ColourUsagePanelPro
             not a strict requirement for every interface element.
           </p>
 
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5">
-                <label
-                  id={`${baseId}-context-label`}
-                  htmlFor={`${baseId}-context-select`}
-                  className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-text-faint"
-                >
-                  Context
-                </label>
-                <select
-                  id={`${baseId}-context-select`}
-                  aria-labelledby={`${baseId}-context-label`}
-                  value={contextId}
-                  onChange={(event) => setContextId(event.target.value as UsageContextId)}
-                  className="rounded-[var(--radius-sm)] border border-border-strong bg-surface-alt px-2 py-1.5 text-xs font-semibold text-text-heading"
-                >
-                  {USAGE_CONTEXTS.map((context) => (
-                    <option key={context.id} value={context.id}>
-                      {context.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <p className="text-[11px] leading-relaxed text-text-faint">
-                Changes how the colours are illustrated, not the colours themselves.
-              </p>
-            </div>
-
-            <p className="text-xs leading-relaxed text-text-muted">{currentContext.description}</p>
-
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-text-faint">
-                Context preview
-              </p>
-              <div className="mt-1.5">
-                <ContextPreview contextId={contextId} palette={palette} />
-              </div>
-            </div>
-          </div>
-
           <div
             role="tablist"
             aria-label="Colour role"
@@ -216,26 +175,69 @@ export function ColourUsagePanel({ open, onClose, palette }: ColourUsagePanelPro
             id={`${baseId}-panel-${selectedRole.id}`}
             aria-labelledby={`${baseId}-tab-${selectedRole.id}`}
             tabIndex={0}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-5"
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <span
-                  aria-hidden="true"
-                  className="h-10 w-10 flex-none rounded-full border border-border-strong shadow-sm"
-                  style={{ backgroundColor: selectedColourHex }}
-                />
-                <div>
-                  <div className="text-base font-semibold text-text-heading">{selectedDisplay.name}</div>
-                  <div className="font-mono text-xs text-text-muted">{selectedColourHex}</div>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="h-10 w-10 flex-none rounded-full border border-border-strong shadow-sm"
+                    style={{ backgroundColor: selectedColourHex }}
+                  />
+                  <div>
+                    <div className="text-base font-semibold text-text-heading">{selectedDisplay.name}</div>
+                    <div className="font-mono text-xs text-text-muted">{selectedColourHex}</div>
+                  </div>
                 </div>
+                <Badge tone={selectedDisplay.includedInRatio ? 'brand' : 'neutral'} className="max-w-full">
+                  {selectedDisplay.ratioLabel}
+                </Badge>
               </div>
-              <Badge tone={selectedDisplay.includedInRatio ? 'brand' : 'neutral'} className="flex-none">
-                {selectedDisplay.ratioLabel}
-              </Badge>
+
+              <p className="text-sm text-text-muted">{selectedDisplay.purpose}</p>
             </div>
 
-            <p className="text-sm text-text-muted">{selectedDisplay.purpose}</p>
+            <div className="flex flex-col gap-3 border-t border-border-default pt-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <label
+                    id={`${baseId}-context-label`}
+                    htmlFor={`${baseId}-context-select`}
+                    className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-text-faint"
+                  >
+                    Context
+                  </label>
+                  <select
+                    id={`${baseId}-context-select`}
+                    aria-labelledby={`${baseId}-context-label`}
+                    value={contextId}
+                    onChange={(event) => setContextId(event.target.value as UsageContextId)}
+                    className="rounded-[var(--radius-sm)] border border-border-strong bg-surface-alt px-2 py-1.5 text-xs font-semibold text-text-heading"
+                  >
+                    {USAGE_CONTEXTS.map((context) => (
+                      <option key={context.id} value={context.id}>
+                        {context.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <p className="text-[11px] leading-relaxed text-text-faint">
+                  Changes how the colours are illustrated, not the colours themselves.
+                </p>
+              </div>
+
+              <p className="text-xs leading-relaxed text-text-muted">{currentContext.description}</p>
+
+              <div>
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-text-faint">
+                  Context preview
+                </p>
+                <div className="mt-1.5">
+                  <ContextPreview contextId={contextId} palette={palette} />
+                </div>
+              </div>
+            </div>
 
             <div className="flex flex-col gap-2">
               <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-text-muted">

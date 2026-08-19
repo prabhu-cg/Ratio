@@ -30,10 +30,11 @@ export function ContextPreview({ contextId, palette }: ContextPreviewProps) {
           className="flex h-24 w-full flex-col items-start justify-center gap-2 rounded-[var(--radius-sm)] border border-border-strong px-4"
           style={{ backgroundColor: dominant }}
         >
-          <span className="text-sm font-bold" style={{ color: text }}>
+          <span aria-hidden="true" className="text-sm font-bold" style={{ color: text }}>
             Headline that grabs attention
           </span>
           <span
+            aria-hidden="true"
             className="rounded-[var(--radius-sm)] px-3 py-1.5 text-[11px] font-semibold"
             style={{ backgroundColor: accent, color: accentLabelColour }}
           >
@@ -50,12 +51,17 @@ export function ContextPreview({ contextId, palette }: ContextPreviewProps) {
           className="flex h-24 w-full gap-2 rounded-[var(--radius-sm)] border border-border-strong p-2"
           style={{ backgroundColor: dominant }}
         >
-          <div className="h-full w-1/4 flex-none rounded-[var(--radius-sm)]" style={{ backgroundColor: secondary }} />
           <div
+            aria-hidden="true"
+            className="h-full w-1/4 flex-none rounded-[var(--radius-sm)]"
+            style={{ backgroundColor: secondary }}
+          />
+          <div
+            aria-hidden="true"
             className="flex h-full flex-1 items-start justify-end rounded-[var(--radius-sm)] p-2"
             style={{ backgroundColor: secondary }}
           >
-            <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ backgroundColor: accent }} />
+            <span className="h-2 w-2 rounded-full" style={{ backgroundColor: accent }} />
           </div>
         </div>
       );
@@ -68,7 +74,7 @@ export function ContextPreview({ contextId, palette }: ContextPreviewProps) {
           className="mx-auto flex h-24 w-16 flex-none flex-col justify-between rounded-[calc(var(--radius-lg)+3px)] border-[3px] border-ink-900 p-1.5"
           style={{ backgroundColor: dominant }}
         >
-          <div className="h-9 rounded-[var(--radius-sm)]" style={{ backgroundColor: secondary }} />
+          <div aria-hidden="true" className="h-9 rounded-[var(--radius-sm)]" style={{ backgroundColor: secondary }} />
           <span aria-hidden="true" className="mx-auto h-3.5 w-3.5 rounded-full" style={{ backgroundColor: accent }} />
         </div>
       );
@@ -81,11 +87,11 @@ export function ContextPreview({ contextId, palette }: ContextPreviewProps) {
           className="flex h-24 w-full flex-col justify-center gap-2 rounded-[var(--radius-sm)] border border-border-strong px-4"
           style={{ backgroundColor: dominant }}
         >
-          <span className="text-sm font-bold" style={{ color: text }}>
+          <span aria-hidden="true" className="text-sm font-bold" style={{ color: text }}>
             Article title
           </span>
-          <div className="flex items-center gap-2">
-            <span aria-hidden="true" className="h-6 w-1 flex-none rounded-full" style={{ backgroundColor: accent }} />
+          <div aria-hidden="true" className="flex items-center gap-2">
+            <span className="h-6 w-1 flex-none rounded-full" style={{ backgroundColor: accent }} />
             <span className="text-xs italic" style={{ color: text }}>
               A pull quote drawn from the text.
             </span>
@@ -102,8 +108,13 @@ export function ContextPreview({ contextId, palette }: ContextPreviewProps) {
           className="flex h-24 w-full items-center justify-center gap-3 rounded-[var(--radius-sm)] border border-border-strong p-3"
           style={{ backgroundColor: dominant }}
         >
-          <div className="h-full w-2/3 rounded-[var(--radius-sm)] shadow-sm" style={{ backgroundColor: secondary }} />
+          <div
+            aria-hidden="true"
+            className="h-full w-2/3 rounded-[var(--radius-sm)] shadow-sm"
+            style={{ backgroundColor: secondary }}
+          />
           <span
+            aria-hidden="true"
             className="flex-none rounded-[var(--radius-sm)] px-3 py-1.5 text-[11px] font-semibold"
             style={{ backgroundColor: accent, color: accentLabelColour }}
           >

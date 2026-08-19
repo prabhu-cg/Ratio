@@ -40,6 +40,7 @@ export function UsageVisualExample({ kind, palette }: UsageVisualExampleProps) {
           style={{ backgroundColor: dominant }}
         >
           <div
+            aria-hidden="true"
             className="h-full w-2/3 rounded-[var(--radius-sm)] shadow-sm"
             style={{ backgroundColor: secondary }}
           />
@@ -55,6 +56,7 @@ export function UsageVisualExample({ kind, palette }: UsageVisualExampleProps) {
           className="flex h-20 w-full items-center justify-center rounded-[var(--radius-sm)] border border-border-strong bg-surface-alt"
         >
           <span
+            aria-hidden="true"
             className="rounded-[var(--radius-sm)] px-4 py-2 text-xs font-semibold"
             style={{ backgroundColor: accent, color: labelColour }}
           >
@@ -72,10 +74,10 @@ export function UsageVisualExample({ kind, palette }: UsageVisualExampleProps) {
           className="flex h-20 w-full flex-col justify-center gap-1.5 rounded-[var(--radius-sm)] border border-border-strong px-3"
           style={{ backgroundColor: dominant }}
         >
-          <span className="text-sm font-bold" style={{ color: text }}>
+          <span aria-hidden="true" className="text-sm font-bold" style={{ color: text }}>
             Heading
           </span>
-          <span className="text-xs" style={{ color: text }}>
+          <span aria-hidden="true" className="text-xs" style={{ color: text }}>
             Body text sits underneath at a lighter visual weight.
           </span>
         </div>
