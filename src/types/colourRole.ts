@@ -24,6 +24,12 @@ export interface ColourRole {
  */
 export type UsageCategory = 'surface' | 'content' | 'action' | 'navigation' | 'feedback' | 'decoration';
 
+/**
+ * A small, live-palette-driven mockup shown for a handful of "important"
+ * usage items in the Colour Usage Map — not every item gets one.
+ */
+export type UsageVisualExampleKind = 'page-canvas' | 'card' | 'button' | 'heading-hierarchy' | 'icon';
+
 /** One concrete place a role's colour could be applied in a real interface. */
 export interface UsageItem {
   id: string;
@@ -31,4 +37,6 @@ export interface UsageItem {
   description: string;
   category: UsageCategory;
   applicableRole: AnyRoleId;
+  /** Present only for the subset of items worth illustrating visually. */
+  visualExample?: UsageVisualExampleKind;
 }

@@ -295,15 +295,17 @@ describe('WorkspaceShell', () => {
       skipOnboarding();
       renderWorkspace();
 
-      const accentInput = screen.getByLabelText('Accent hex value');
-      await user.clear(accentInput);
-      await user.type(accentInput, '#00A86B');
+      // Dominant is the panel's default-selected role, so its hex is visible
+      // in the detail pane without any further interaction.
+      const dominantInput = screen.getByLabelText('Dominant hex value');
+      await user.clear(dominantInput);
+      await user.type(dominantInput, '#00A86B');
       await user.tab();
 
       await user.click(screen.getByRole('button', { name: 'Explore colour usage' }));
 
       const dialog = screen.getByRole('dialog', { name: 'Colour usage' });
-      expect(within(dialog).getByText('#00A86B')).toBeInTheDocument();
+      expect(within(dialog).getByRole('tabpanel')).toHaveTextContent('#00A86B');
     });
   });
 });

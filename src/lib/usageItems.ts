@@ -17,6 +17,7 @@ export const USAGE_ITEMS: UsageItem[] = [
     description: 'The base surface behind everything else in the interface.',
     category: 'surface',
     applicableRole: 'dominant',
+    visualExample: 'page-canvas',
   },
   {
     id: 'dominant-main-canvas',
@@ -40,6 +41,7 @@ export const USAGE_ITEMS: UsageItem[] = [
     description: 'Distinct content groupings that sit on top of the dominant surface.',
     category: 'surface',
     applicableRole: 'secondary',
+    visualExample: 'card',
   },
   {
     id: 'secondary-panels',
@@ -63,6 +65,7 @@ export const USAGE_ITEMS: UsageItem[] = [
     description: 'The main call-to-action a user is meant to notice first.',
     category: 'action',
     applicableRole: 'accent',
+    visualExample: 'button',
   },
   {
     id: 'accent-important-links',
@@ -100,6 +103,7 @@ export const USAGE_ITEMS: UsageItem[] = [
     description: 'Section and page titles that establish content hierarchy.',
     category: 'content',
     applicableRole: 'text',
+    visualExample: 'heading-hierarchy',
   },
   {
     id: 'text-body-copy',
@@ -121,6 +125,7 @@ export const USAGE_ITEMS: UsageItem[] = [
     description: 'Foreground iconography that should read at the same weight as body text.',
     category: 'content',
     applicableRole: 'text',
+    visualExample: 'icon',
   },
 ];
 
