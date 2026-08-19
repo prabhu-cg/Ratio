@@ -276,4 +276,34 @@ describe('WorkspaceShell', () => {
       expect(screen.getByText('Check important foreground and background colour relationships.')).toBeInTheDocument();
     });
   });
+
+  describe('colour usage entry point', () => {
+    it('is not open by default, and opens the colour usage panel on demand', async () => {
+      const user = userEvent.setup();
+      skipOnboarding();
+      renderWorkspace();
+
+      expect(screen.queryByRole('dialog', { name: 'Colour usage' })).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'Explore colour usage' }));
+
+      expect(screen.getByRole('dialog', { name: 'Colour usage' })).toBeInTheDocument();
+    });
+
+    it('reflects a colour change made after the panel was last opened', async () => {
+      const user = userEvent.setup();
+      skipOnboarding();
+      renderWorkspace();
+
+      const accentInput = screen.getByLabelText('Accent hex value');
+      await user.clear(accentInput);
+      await user.type(accentInput, '#00A86B');
+      await user.tab();
+
+      await user.click(screen.getByRole('button', { name: 'Explore colour usage' }));
+
+      const dialog = screen.getByRole('dialog', { name: 'Colour usage' });
+      expect(within(dialog).getByText('#00A86B')).toBeInTheDocument();
+    });
+  });
 });

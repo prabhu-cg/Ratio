@@ -37,7 +37,7 @@ export interface ProjectPalette {
   supporting: SupportingPalette;
 }
 
-const ROLE_COPY: Record<PaletteRoleId, { label: string; percentage: number; description: string }> = {
+export const ROLE_COPY: Record<PaletteRoleId, { label: string; percentage: number; description: string }> = {
   dominant: {
     label: 'Dominant',
     percentage: 60,
@@ -55,7 +55,7 @@ const ROLE_COPY: Record<PaletteRoleId, { label: string; percentage: number; desc
   },
 };
 
-const SUPPORTING_ROLE_COPY: Record<SupportingRoleId, { label: string; description: string }> = {
+export const SUPPORTING_ROLE_COPY: Record<SupportingRoleId, { label: string; description: string }> = {
   text: {
     label: 'Text / Foreground',
     description:

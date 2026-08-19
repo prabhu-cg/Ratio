@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
 import { ColourInputCard } from '@/components/workspace/ColourInputCard';
 import { DEFAULT_HEX, DEFAULT_SUPPORTING_HEX, paletteRoles, supportingRoles } from '@/types/palette';
@@ -7,9 +8,10 @@ interface ControlsPanelProps {
   palette: ProjectPalette;
   onChangeRoleHex: (roleId: AnyRoleId, hex: string) => boolean;
   onResetRole: (roleId: AnyRoleId) => void;
+  onOpenColourUsage: () => void;
 }
 
-export function ControlsPanel({ palette, onChangeRoleHex, onResetRole }: ControlsPanelProps) {
+export function ControlsPanel({ palette, onChangeRoleHex, onResetRole, onOpenColourUsage }: ControlsPanelProps) {
   const roles = paletteRoles(palette.ratio);
   const supporting = supportingRoles(palette.supporting);
 
@@ -59,6 +61,20 @@ export function ControlsPanel({ palette, onChangeRoleHex, onResetRole }: Control
           Text / Foreground is a supporting colour used for readable content and interface
           foregrounds — it is not included in the 60–30–10 visual ratio.
         </p>
+      </div>
+
+      <Divider />
+
+      <div className="flex flex-col gap-2 rounded-[var(--radius-md)] border border-dashed border-border-strong p-4">
+        <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-text-muted">
+          Colour usage
+        </h2>
+        <p className="text-xs leading-relaxed text-text-muted">
+          Explore where each colour in your palette can typically be applied.
+        </p>
+        <Button variant="secondary" size="md" className="mt-1 w-full" onClick={onOpenColourUsage}>
+          Explore colour usage
+        </Button>
       </div>
 
       <p className="mt-auto flex items-center gap-1.5 text-xs text-text-faint">

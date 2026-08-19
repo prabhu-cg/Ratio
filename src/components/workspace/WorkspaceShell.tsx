@@ -1,10 +1,11 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { WorkspaceTopBar } from '@/components/workspace/WorkspaceTopBar';
 import { ControlsPanel } from '@/components/workspace/ControlsPanel';
 import { RatioVisualisation } from '@/components/workspace/RatioVisualisation';
 import { PreviewPanel } from '@/components/workspace/PreviewPanel';
 import { AccessibilityPanel } from '@/components/workspace/AccessibilityPanel';
 import { GuidePanel } from '@/components/workspace/GuidePanel';
+import { ColourUsagePanel } from '@/components/workspace/usage/ColourUsagePanel';
 import { useToast } from '@/components/ui/ToastProvider';
 import { usePalette } from '@/hooks/usePalette';
 import { usePreviewSettings } from '@/hooks/usePreviewSettings';
@@ -12,6 +13,7 @@ import { useOnboarding } from '@/hooks/useOnboarding';
 
 export function WorkspaceShell() {
   const { palette, setRoleHex, resetRole, resetPalette, isModified } = usePalette();
+  const [isColourUsageOpen, setColourUsageOpen] = useState(false);
   const {
     templateId,
     setTemplateId,
@@ -83,7 +85,12 @@ export function WorkspaceShell() {
       />
       <h1 className="sr-only">RATIO workspace — colour controls, ratio, and live preview</h1>
       <div id="workspace-main" className="workspace-grid min-h-0 flex-1 overflow-y-auto md:overflow-visible">
-        <ControlsPanel palette={palette} onChangeRoleHex={setRoleHex} onResetRole={resetRole} />
+        <ControlsPanel
+          palette={palette}
+          onChangeRoleHex={setRoleHex}
+          onResetRole={resetRole}
+          onOpenColourUsage={() => setColourUsageOpen(true)}
+        />
         <RatioVisualisation palette={palette} />
         <AccessibilityPanel palette={palette} />
         <PreviewPanel
@@ -98,6 +105,11 @@ export function WorkspaceShell() {
       </div>
 
       <GuidePanel open={isGuideOpen} onClose={dismissGuide} />
+      <ColourUsagePanel
+        open={isColourUsageOpen}
+        onClose={() => setColourUsageOpen(false)}
+        palette={palette}
+      />
     </div>
   );
 }
